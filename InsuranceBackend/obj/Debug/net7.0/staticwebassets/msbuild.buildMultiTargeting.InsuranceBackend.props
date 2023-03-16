@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\InsuranceBackend.props" />
+</Project>
