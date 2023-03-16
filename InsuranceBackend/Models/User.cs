@@ -14,7 +14,7 @@ public partial class User
 
     public UserTypeEnum Type { get; set; }
 
-    public UserStatusEnum Status { get; set; }
+    public StatusEnum Status { get; set; }
 
     public virtual ICollection<Agent> Agents { get; } = new List<Agent>();
 

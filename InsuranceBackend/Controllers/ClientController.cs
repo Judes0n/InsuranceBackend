@@ -48,7 +48,7 @@ namespace Insurance.Controllers
             if (logUser == null)
             {
                 user.Type = UserTypeEnum.Client;
-                user.Status = UserStatusEnum.Inactive;
+                user.Status = StatusEnum.Inactive;
                 if (_loginService.AddUser(user) != null)
                 {
                     return Ok("Client Registered!");
@@ -62,6 +62,7 @@ namespace Insurance.Controllers
             }
             return BadRequest("Registration Failed");
         }
+        
     }
 
 }

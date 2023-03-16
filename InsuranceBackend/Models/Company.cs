@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsuranceBackend.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -19,7 +20,7 @@ public partial class Company
 
     public string? ProfilePic { get; set; }
 
-    public int? Status { get; set; }
+    public CompanyStatusEnum Status { get; set; }
 
     public virtual ICollection<Policy> Policies { get; } = new List<Policy>();
 

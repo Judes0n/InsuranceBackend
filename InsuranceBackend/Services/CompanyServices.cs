@@ -1,4 +1,5 @@
 ﻿using InsuranceBackend.Models;
+using InsuranceBackend.Enum;
 
 namespace InsuranceBackend.Services
 {
@@ -36,6 +37,26 @@ namespace InsuranceBackend.Services
             _context.SaveChanges();
             return GetCompany(companyID);
         }
+        //Approvals
+        public void ApproveCompany(int _companyID)
+        {
+            var dbcompany = GetCompany(_companyID);
+            dbcompany.Status = CompanyStatusEnum.Approved;
+            UpdateCompany(_companyID,dbcompany);
+        }
+        public void RejectCompany(int _companyID)
+        {
+            var dbcompany = GetCompany(_companyID);
+            dbcompany.Status = CompanyStatusEnum.Unapproved;
+            UpdateCompany(_companyID, dbcompany);
+        }
+        public void BlockCompany(int _companyID)
+        {
+            var dbcompany = GetCompany(_companyID);
+            dbcompany.Status = CompanyStatusEnum.Blocked;
+            UpdateCompany(_companyID, dbcompany);
+        }
+        //
 
     }
 }

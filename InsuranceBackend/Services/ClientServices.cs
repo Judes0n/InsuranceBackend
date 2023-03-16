@@ -1,4 +1,5 @@
-﻿using InsuranceBackend.Models;
+﻿using InsuranceBackend.Enum;
+using InsuranceBackend.Models;
 
 namespace InsuranceBackend.Services
 {
@@ -43,7 +44,36 @@ namespace InsuranceBackend.Services
             _context.SaveChanges(true);
             return GetClient(client.ClientId);
         }
+        //approvals
+        public void ApproveClient(int _clientID)
+        {
+            var dbclient = GetClient(_clientID);
+            dbclient.Status = StatusEnum.Active;
+            UpdateClient(_clientID, dbclient);
+        }
+        public void RejectClient(int _clientID)
+        {
+            var dbclient = GetClient(_clientID);
+            dbclient.Status = StatusEnum.Inactive;
+            UpdateClient(_clientID, dbclient);
+        }
+        public void BlockClient(int _clientID)
+        {
+            var dbclient = GetClient(_clientID);
+            dbclient.Status = StatusEnum.Blocked;
+            UpdateClient(_clientID, dbclient);
+        }
+        //ClientPolicies
+        public IEnumerable<ClientPolicy> GetClientPolicies(int _clientID)
+        {
+           IEnumerable<ClientPolicy> clientpolicies = new List<ClientPolicy>();
+           foreach (var _clientpolicy in _context.ClientPolicies)
+                if(_clientpolicy.ClientId == _clientID)
+                {
+                    clientpolicies.Append(_clientpolicy);
+                }
+           return clientpolicies;
+        }
 
-    
     }
 }

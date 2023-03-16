@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsuranceBackend.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -17,7 +18,7 @@ public partial class Policy
 
     public decimal? PolicyAmount { get; set; }
 
-    public int Status { get; set; }
+    public StatusEnum Status { get; set; }
 
     public virtual Company? Company { get; set; }
 

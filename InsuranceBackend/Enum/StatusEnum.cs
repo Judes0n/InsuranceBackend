@@ -1,6 +1,6 @@
 ﻿namespace InsuranceBackend.Enum
 {
-    public enum UserStatusEnum
+    public enum StatusEnum
     {
         Inactive,
         Active,

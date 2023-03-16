@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsuranceBackend.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -21,7 +22,7 @@ public partial class Client
 
     public decimal? PhoneNum { get; set; }
 
-    public int? Status { get; set; }
+    public StatusEnum Status { get; set; }
 
     public virtual ICollection<ClientPolicy> ClientPolicies { get; } = new List<ClientPolicy>();
 

@@ -45,7 +45,7 @@ namespace Insurance.Controllers
             if (logUser == null)
             {
                 user.Type = UserTypeEnum.Agent;
-                user.Status = UserStatusEnum.Inactive;
+                user.Status = StatusEnum.Inactive;
                 if (_userService.AddUser(user) != null)
                 {
                     return Ok("Agent Registered!");
