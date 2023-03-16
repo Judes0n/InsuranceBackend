@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsuranceBackend.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -11,9 +12,9 @@ public partial class User
 
     public string Password { get; set; } = null!;
 
-    public int Type { get; set; }
+    public UserTypeEnum Type { get; set; }
 
-    public int Status { get; set; }
+    public UserStatusEnum Status { get; set; }
 
     public virtual ICollection<Agent> Agents { get; } = new List<Agent>();
 

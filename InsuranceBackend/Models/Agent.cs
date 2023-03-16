@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsuranceBackend.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -25,7 +26,7 @@ public partial class Agent
 
     public string? ProfilePic { get; set; }
 
-    public int Status { get; set; }
+    public AgentStatusEnum Status { get; set; }
 
     public virtual ICollection<ClientPolicy> ClientPolicies { get; } = new List<ClientPolicy>();
 
