@@ -7,7 +7,7 @@ public partial class ClientPolicy
 {
     public int ClientPolicyId { get; set; }
 
-    public int? ClientId { get; set; }
+    public int ClientId { get; set; }
 
     public int? PolicyTermId { get; set; }
 

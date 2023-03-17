@@ -14,11 +14,11 @@ namespace Insurance.Controllers
     public class ClientController : ControllerBase
     {
         ClientServices _clientService;
-        UserService _loginService;
+        UserService _userService;
         public ClientController()
         {
             _clientService = new ClientServices();
-            _loginService = new UserService();
+            _userService = new UserService();
         }
 
         [HttpPost]
@@ -26,7 +26,7 @@ namespace Insurance.Controllers
 
         public async Task<IActionResult> Login([FromBody] User user)
         {
-            var logUser = _loginService.GetUser(user.UserName);
+            var logUser = _userService.GetUser(user.UserName);
             if (logUser==null || logUser.Type != UserTypeEnum.Client)
             {
                 return BadRequest("Invalid UserName"); 
@@ -44,12 +44,12 @@ namespace Insurance.Controllers
 
         public async Task<IActionResult> Register([FromBody] User user)
         {
-            var logUser = _loginService.GetUser(user.UserName);
+            var logUser = _userService.GetUser(user.UserName);
             if (logUser == null)
             {
                 user.Type = UserTypeEnum.Client;
                 user.Status = StatusEnum.Inactive;
-                if (_loginService.AddUser(user) != null)
+                if (_userService.AddUser(user) != null)
                 {
                     return Ok("Client Registered!");
                 }
@@ -62,7 +62,7 @@ namespace Insurance.Controllers
             }
             return BadRequest("Registration Failed");
         }
-        
+     
     }
 
 }

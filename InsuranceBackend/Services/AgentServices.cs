@@ -5,7 +5,7 @@ namespace InsuranceBackend.Services
 {
     public class AgentServices
     {
-        InsuranceDbContext _context;
+        readonly InsuranceDbContext _context;
 
         public AgentServices()
         {
@@ -14,7 +14,7 @@ namespace InsuranceBackend.Services
         public Agent GetAgent(int agentID)
         {
             var res = _context.Agents.Find(agentID);
-            return res == null ? throw new Exception() : res;
+            return res ?? throw new Exception();
         }
 
         public void DeleteAgent(int agentID)
@@ -34,22 +34,14 @@ namespace InsuranceBackend.Services
             return GetAgent(agentID);
         }
         //approvals
-        public void ApproveAgent(int _agentID)
+        public void ChangeAgentStatus(int _agentID,StatusEnum e)
         {
             var dbagent=GetAgent(_agentID);
-            dbagent.Status=StatusEnum.Active;
-            UpdateAgent(_agentID, dbagent);
-        }
-        public void RejectAgent(int _agentID)
-        {
-            var dbagent=GetAgent(_agentID);
-            dbagent.Status = StatusEnum.Inactive; 
-            UpdateAgent(_agentID, dbagent);
-        }
-        public void BlockAgent(int _agentID)
-        {
-            var dbagent=GetAgent(_agentID);
-            dbagent.Status = StatusEnum.Blocked;
+            if (!StatusEnum.IsDefined(typeof(StatusEnum), e))
+            {
+                throw new Exception();
+            }
+            dbagent.Status = e;
             UpdateAgent(_agentID, dbagent);
         }
         //

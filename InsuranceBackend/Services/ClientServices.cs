@@ -1,11 +1,13 @@
 ﻿using InsuranceBackend.Enum;
 using InsuranceBackend.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace InsuranceBackend.Services
 {
     public class ClientServices
-    {   
-        InsuranceDbContext _context;
+    {
+        readonly InsuranceDbContext _context;
 
         public ClientServices()
         {
@@ -14,7 +16,7 @@ namespace InsuranceBackend.Services
         public Client GetClient(int clientID) 
         {
             var res = _context.Clients.Find(clientID);
-            return res == null ? throw new Exception() : res;
+            return res ?? throw new Exception();
         }
         public IEnumerable<Client> GetAllClient()
         { 
@@ -45,35 +47,121 @@ namespace InsuranceBackend.Services
             return GetClient(client.ClientId);
         }
         //approvals
-        public void ApproveClient(int _clientID)
+        public void ChangeClientStatus(int _clientID,StatusEnum e)
         {
             var dbclient = GetClient(_clientID);
-            dbclient.Status = StatusEnum.Active;
+            if (!StatusEnum.IsDefined(typeof(StatusEnum), e))
+            {
+                throw new Exception();
+            }
+            dbclient.Status = e;
             UpdateClient(_clientID, dbclient);
         }
-        public void RejectClient(int _clientID)
+        //ClientPolicies && ClientDeath
+        public void AddClientPolicy(ClientPolicy clientPolicy)
         {
-            var dbclient = GetClient(_clientID);
-            dbclient.Status = StatusEnum.Inactive;
-            UpdateClient(_clientID, dbclient);
-        }
-        public void BlockClient(int _clientID)
-        {
-            var dbclient = GetClient(_clientID);
-            dbclient.Status = StatusEnum.Blocked;
-            UpdateClient(_clientID, dbclient);
-        }
-        //ClientPolicies
-        public IEnumerable<ClientPolicy> GetClientPolicies(int _clientID)
-        {
-           IEnumerable<ClientPolicy> clientpolicies = new List<ClientPolicy>();
-           foreach (var _clientpolicy in _context.ClientPolicies)
-                if(_clientpolicy.ClientId == _clientID)
-                {
-                    clientpolicies.Append(_clientpolicy);
-                }
-           return clientpolicies;
+            ValidateClientPolicy(clientPolicy);
+            _context.ClientPolicies.Add(clientPolicy);
+            _context.SaveChangesAsync();
         }
 
+        public void AddClientDeath(ClientDeath clientDeath)
+        {
+            ValidateClientDeath(clientDeath);
+            _context.ClientDeaths.Add(clientDeath);
+            _context.SaveChangesAsync();    
+        }
+
+        public void AddPolicyMaturity(Maturity maturity)
+        {   
+            ValidateMaturity(maturity);
+            _context.Maturities.Add(maturity);
+            _context.SaveChangesAsync();  
+        }
+
+        public void AddPolicyPremium(Premium premium)
+        {
+            ValidatePremium(premium);
+            _context.Premia.Add(premium);
+            _context.SaveChangesAsync();
+        }
+
+        //Views
+        public IEnumerable<Maturity> ViewMaturities(int clientID)
+        {
+            IEnumerable<Maturity> maturities=new List<Maturity>();
+            maturities = _context.Maturities.Include(m => m.ClientPolicyId).Where(m => m.ClientPolicy.ClientId == clientID).ToList();
+            return maturities;
+        }
+
+        public IEnumerable<Premium> ViewPremia(int clientID)
+        {
+            IEnumerable<Premium> premia=new List<Premium>();
+            premia = _context.Premia.Include(m=>m.ClientPolicyId).Where(m=>m.ClientPolicy.ClientId==clientID).ToList();
+            return premia;
+        }
+
+        public List<ClientDeath> ViewClientDeath(int clientID)
+        {
+            return _context.ClientDeaths.Include(c => c.ClientPolicyId).Where(c => c.ClientPolicy.ClientId == clientID).ToList();
+        }
+
+        public IEnumerable<ClientPolicy> ViewClientPolicies(int clientID)
+        {
+            IEnumerable<ClientPolicy> clientpolicies = new List<ClientPolicy>();
+            //foreach (var _clientpolicy in _context.ClientPolicies)
+            //     if(_clientpolicy.ClientId == _clientID)
+            //     {
+            //         clientpolicies.Append(_clientpolicy);
+            //     }
+            clientpolicies = _context.ClientPolicies.ToList().Where(c => c.ClientId == clientID);
+            return clientpolicies;
+        }
+       
+        //Validations
+        private void ValidatePremium(Premium premium)
+        {
+            if (premium == null)
+                throw new ArgumentNullException(nameof(premium));
+            else if(_context.Premia.FirstOrDefault(f=>f.ClientPolicyId==premium.ClientPolicyId) != null)
+                throw new ArgumentException(nameof(premium));
+        }
+
+        private void ValidateMaturity(Maturity maturity)
+        {
+            if (maturity == null)
+                throw new ArgumentNullException(nameof(maturity));
+            else if (_context.Maturities.FirstOrDefault(f=>f.ClientPolicyId == maturity.ClientPolicyId) != null )
+                throw new ArgumentException(nameof(maturity));
+        }
+
+        private void ValidateClientDeath(ClientDeath clientDeath)
+        {
+            if (clientDeath == null)
+                throw new ArgumentNullException(nameof(clientDeath));
+            else if (_context.ClientDeaths.FirstOrDefault(c => c.ClientPolicyId == clientDeath.ClientPolicyId) != null)
+                throw new ArgumentException(nameof(clientDeath));
+        }
+
+        private bool ValidateAgent(int agentID)
+        {
+            return _context.Agents.FirstOrDefault(a => a.AgentId == agentID) != null;
+        }
+
+        private bool ValidateClient(int clientID)
+        {
+            return _context.Clients.FirstOrDefault(c => c.ClientId == clientID) != null; 
+        }
+
+        private void ValidateClientPolicy(ClientPolicy clientPolicy)
+        {
+            if(clientPolicy == null)
+                throw new ArgumentNullException(nameof(clientPolicy));
+            else if(!ValidateAgent(clientPolicy.AgentId))
+                throw new ArgumentNullException(nameof(clientPolicy.AgentId));
+            else if(!ValidateClient(clientPolicy.ClientId))
+                throw new ArgumentNullException(nameof(clientPolicy.ClientId));
+        }
+        
     }
 }
