@@ -8,7 +8,7 @@ public partial class Client
 {
     public int ClientId { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
     public string? ClientName { get; set; }
 
@@ -22,11 +22,12 @@ public partial class Client
 
     public decimal? PhoneNum { get; set; }
 
-    public StatusEnum Status { get; set; }
+    public ActorStatusEnum Status { get; set; }
 
     public virtual ICollection<ClientPolicy> ClientPolicies { get; } = new List<ClientPolicy>();
 
     public virtual ICollection<Nominee> Nominees { get; } = new List<Nominee>();
 
     public virtual User? User { get; set; }
+
 }

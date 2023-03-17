@@ -1,6 +1,6 @@
 ﻿namespace InsuranceBackend.Enum
 {
-    public enum CompanyStatusEnum
+    public enum ActorStatusEnum
     {
         Unapproved,
         Approved,

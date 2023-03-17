@@ -39,10 +39,10 @@ namespace InsuranceBackend.Services
             return GetCompany(companyID);
         }
         //Approvals
-        public void SetCompanyStatus(int _companyID,CompanyStatusEnum e)
+        public void SetCompanyStatus(int _companyID,ActorStatusEnum e)
         {
             var dbcompany = GetCompany(_companyID);
-            if (!CompanyStatusEnum.IsDefined(typeof(CompanyStatusEnum), e))
+            if (!ActorStatusEnum.IsDefined(typeof(ActorStatusEnum), e))
             {
                 throw new Exception();
             }

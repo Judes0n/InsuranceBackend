@@ -20,7 +20,7 @@ public partial class Company
 
     public string? ProfilePic { get; set; }
 
-    public CompanyStatusEnum Status { get; set; }
+    public ActorStatusEnum Status { get; set; }
 
     public virtual ICollection<Policy> Policies { get; } = new List<Policy>();
 

@@ -47,7 +47,7 @@ namespace InsuranceBackend.Services
             return GetClient(client.ClientId);
         }
         //approvals
-        public void ChangeClientStatus(int _clientID,StatusEnum e)
+        public void ChangeClientStatus(int _clientID,ActorStatusEnum e)
         {
             var dbclient = GetClient(_clientID);
             if (!StatusEnum.IsDefined(typeof(StatusEnum), e))
