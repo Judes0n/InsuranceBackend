@@ -65,8 +65,14 @@ namespace Insurance.Controllers
             return BadRequest("Invalid UserName or Password");
             
         }
-
+        [HttpPost]
+        [Route("AddClientPolicies")]
        
+        public async Task<IActionResult> AddPolicy([FromBody] ClientPolicy clientPolicy)
+        {
+            _clientService.AddClientPolicy(clientPolicy);
+            return Ok("Polcy Added");
+        }
      
     }
 

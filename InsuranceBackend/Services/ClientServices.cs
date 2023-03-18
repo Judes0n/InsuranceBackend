@@ -88,7 +88,7 @@ namespace InsuranceBackend.Services
 
         //Views
         public IEnumerable<Maturity> ViewMaturities(int clientID)
-        {
+        {        
             IEnumerable<Maturity> maturities=new List<Maturity>();
             maturities = _context.Maturities.Include(m => m.ClientPolicyId).Where(m => m.ClientPolicy.ClientId == clientID).ToList();
             return maturities;
@@ -97,7 +97,7 @@ namespace InsuranceBackend.Services
         public IEnumerable<Premium> ViewPremia(int clientID)
         {
             IEnumerable<Premium> premia=new List<Premium>();
-            premia = _context.Premia.Include(m=>m.ClientPolicyId).Where(m=>m.ClientPolicy.ClientId==clientID).ToList();
+            premia = _context.Premia.Include(m => m.ClientPolicyId).Where(m => m.ClientPolicy.ClientId == clientID).ToList();
             return premia;
         }
 
@@ -124,7 +124,7 @@ namespace InsuranceBackend.Services
             if (premium == null)
                 throw new ArgumentNullException(nameof(premium));
             else if(_context.Premia.FirstOrDefault(f=>f.ClientPolicyId==premium.ClientPolicyId) != null)
-                throw new ArgumentException(nameof(premium));
+                throw new ArgumentException(null, nameof(premium));
         }
 
         private void ValidateMaturity(Maturity maturity)
@@ -132,7 +132,7 @@ namespace InsuranceBackend.Services
             if (maturity == null)
                 throw new ArgumentNullException(nameof(maturity));
             else if (_context.Maturities.FirstOrDefault(f=>f.ClientPolicyId == maturity.ClientPolicyId) != null )
-                throw new ArgumentException(nameof(maturity));
+                throw new ArgumentException(null, nameof(maturity));
         }
 
         private void ValidateClientDeath(ClientDeath clientDeath)
@@ -140,7 +140,7 @@ namespace InsuranceBackend.Services
             if (clientDeath == null)
                 throw new ArgumentNullException(nameof(clientDeath));
             else if (_context.ClientDeaths.FirstOrDefault(c => c.ClientPolicyId == clientDeath.ClientPolicyId) != null)
-                throw new ArgumentException(nameof(clientDeath));
+                throw new ArgumentException(null, nameof(clientDeath));
         }
 
         private bool ValidateAgent(int agentID)
@@ -158,9 +158,9 @@ namespace InsuranceBackend.Services
             if(clientPolicy == null)
                 throw new ArgumentNullException(nameof(clientPolicy));
             else if(!ValidateAgent(clientPolicy.AgentId))
-                throw new ArgumentNullException(nameof(clientPolicy.AgentId));
+                throw new ArgumentNullException(null, nameof(clientPolicy.AgentId));
             else if(!ValidateClient(clientPolicy.ClientId))
-                throw new ArgumentNullException(nameof(clientPolicy.ClientId));
+                throw new ArgumentNullException(null, nameof(clientPolicy.ClientId));
         }
         
     }
