@@ -55,14 +55,15 @@ namespace Insurance.Controllers
                                     client.Dob = "Date of Birth";
                                     client.ProfilePic = "Profile Pic";
                                     client.PhoneNum = 0000000000;
+                                    client.Email = "Email";
                                     client.Status = ActorStatusEnum.Unapproved;
-                                    _clientService.AddClient(client);
+                                   _clientService.AddClient(client);
                                 }
                                 break;
                             }
                         case UserTypeEnum.Agent:
                             {
-                                Agent agent = new Agent();
+                                Agent agent = new();
                                 var dbagent= _userService.GetUser(user.UserName); 
                                 if (dbagent != null) 
                                 { 
@@ -83,7 +84,7 @@ namespace Insurance.Controllers
                             }
                         case UserTypeEnum.Company:
                             {
-                                Company company = new Company();
+                                Company company = new();
                                 var dbcompany = _userService.GetUser(user.UserName);
                                 if(dbcompany != null)
                                 {

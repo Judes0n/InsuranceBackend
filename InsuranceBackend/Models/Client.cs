@@ -22,6 +22,8 @@ public partial class Client
 
     public decimal? PhoneNum { get; set; }
 
+    public string? Email { get; set; }
+
     public ActorStatusEnum Status { get; set; }
 
     public virtual ICollection<ClientPolicy> ClientPolicies { get; } = new List<ClientPolicy>();
