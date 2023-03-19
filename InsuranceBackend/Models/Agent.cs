@@ -26,7 +26,7 @@ public partial class Agent
 
     public string? ProfilePic { get; set; }
 
-    public StatusEnum Status { get; set; }
+    public ActorStatusEnum Status { get; set; }
 
     public virtual ICollection<ClientPolicy> ClientPolicies { get; } = new List<ClientPolicy>();
 

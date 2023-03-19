@@ -3,13 +3,19 @@ using InsuranceBackend.Enum;
 
 namespace InsuranceBackend.Services
 {
-    public class AgentServices
+    public class AgentService
     {
         readonly InsuranceDbContext _context;
 
-        public AgentServices()
+        public AgentService()
         {
             _context = new InsuranceDbContext();
+        }
+        public Agent AddAgent(Agent agent)
+        {
+            _context.Agents.Add(agent);
+            _context.SaveChangesAsync();
+            return GetAgent(agent.AgentId);
         }
         public Agent GetAgent(int agentID)
         {
@@ -34,7 +40,7 @@ namespace InsuranceBackend.Services
             return GetAgent(agentID);
         }
         //approvals
-        public void ChangeAgentStatus(int _agentID,StatusEnum e)
+        public void ChangeAgentStatus(int _agentID,ActorStatusEnum e)
         {
             var dbagent=GetAgent(_agentID);
             if (!StatusEnum.IsDefined(typeof(StatusEnum), e))

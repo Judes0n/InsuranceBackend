@@ -12,6 +12,13 @@ namespace InsuranceBackend.Services
         {
             _context = new InsuranceDbContext();
         }
+        public Company AddCompany(Company company)
+        {
+            _context.Companies.Add(company);
+            _context.SaveChangesAsync();
+            return GetCompany(company.CompanyId);
+        }
+
         public Company GetCompany(int companyID)
         {
             var res = _context.Companies.Find(companyID);
@@ -50,6 +57,20 @@ namespace InsuranceBackend.Services
             UpdateCompany(_companyID,dbcompany);
         }
         //
-
+        public void AddPolicy(Policy policy,int companyID)
+        {
+            ValidatePolicy(policy);
+            policy.Status = StatusEnum.Inactive;
+            policy.CompanyId = companyID;
+            _context.Policies.Add(policy);
+            _context.SaveChangesAsync();
+        }
+        //Validations
+        private void ValidatePolicy(Policy policy)
+        {   
+            var policytypeID=_context.PolicyTypes.Select(p=>p.PolicytypeId==policy.PolicytypeId);
+            if (policytypeID==null)
+                throw new ArgumentNullException(null, nameof(policytypeID));   
+        }
     }
 }

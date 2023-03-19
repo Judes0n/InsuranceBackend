@@ -18,6 +18,11 @@ namespace InsuranceBackend.Services
             var res = _context.Clients.Find(clientID);
             return res ?? throw new Exception();
         }
+
+        public Client GetClient(string userName)
+        {
+            return _context.Clients.Find(userName)?? throw new DataMisalignedException(nameof(userName));
+        }
         public IEnumerable<Client> GetAllClient()
         { 
             return _context.Clients.ToList(); 
@@ -86,6 +91,12 @@ namespace InsuranceBackend.Services
             _context.SaveChangesAsync();
         }
 
+        public void AddNominee(Nominee nominee)
+        {
+            _context.Nominees.Add(nominee);
+            _context.SaveChangesAsync();
+        }
+
         //Views
         public IEnumerable<Maturity> ViewMaturities(int clientID)
         {        
@@ -117,7 +128,11 @@ namespace InsuranceBackend.Services
             clientpolicies = _context.ClientPolicies.ToList().Where(c => c.ClientId == clientID);
             return clientpolicies;
         }
-       
+
+        public IEnumerable<Nominee> ViewNominees(int clientID)
+        {
+           return _context.Nominees.Include(n=>n.ClientId == clientID).ToList();
+        }       
         //Validations
         private void ValidatePremium(Premium premium)
         {
