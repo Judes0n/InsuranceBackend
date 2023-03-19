@@ -4,11 +4,11 @@ using System;
 
 namespace InsuranceBackend.Services
 {
-    public class CompanyServices
+    public class CompanyService
     {
         InsuranceDbContext _context;
 
-        public CompanyServices()
+        public CompanyService()
         {
             _context = new InsuranceDbContext();
         }
