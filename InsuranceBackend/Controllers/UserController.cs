@@ -16,13 +16,13 @@ namespace Insurance.Controllers
 
     public class UserController : ControllerBase
     {
-        ClientServices _clientService;
+        ClientService _clientService;
         UserService _userService;
         CompanyService _companyService;
         AgentService _agentService;
         public UserController()
         {
-            _clientService = new ClientServices();
+            _clientService = new ClientService();
             _agentService = new AgentService();
             _companyService = new CompanyService();
             _userService = new UserService();
