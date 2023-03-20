@@ -2,7 +2,6 @@
 using InsuranceBackend.Enum;
 using System;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata.Ecma335;
 
 namespace InsuranceBackend.Services
 {
@@ -47,7 +46,10 @@ namespace InsuranceBackend.Services
             _context.SaveChanges();
             return GetCompany(companyID);
         }
-      
+        public IEnumerable<AgentCompany> ViewAgents(int companyID)
+        {
+            return _context.AgentCompanies.Include(a=>a.CompanyId==companyID).ToList();
+        }
         //Approvals
         public void SetCompanyStatus(int _companyID,ActorStatusEnum e)
         {
@@ -68,16 +70,9 @@ namespace InsuranceBackend.Services
             _context.SaveChangesAsync();
         }
 
-        //Views
-
-        public IEnumerable<AgentCompany> ViewAgents(int companyID)
-        {
-            return _context.AgentCompanies.Include(a => a.CompanyId == companyID).ToList() ?? throw new NullReferenceException(nameof(companyID));
-        }
-
         public IEnumerable<Policy> ViewPolicies(int companyID)
         {
-            return _context.Policies.Include(p=>p.CompanyId==companyID).ToList()?? throw new NullReferenceException(nameof(companyID));
+            return _context.Policies.Include(p=>p.CompanyId==companyID).ToList();
         }
         //Validations
         private void ValidatePolicy(Policy policy)

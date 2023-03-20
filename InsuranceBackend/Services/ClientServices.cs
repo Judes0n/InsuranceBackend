@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace InsuranceBackend.Services
 {
-    public class ClientService
+    public class ClientServices
     {
         readonly InsuranceDbContext _context;
 
-        public ClientService()
+        public ClientServices()
         {
             _context = new InsuranceDbContext();
         }
@@ -117,10 +117,16 @@ namespace InsuranceBackend.Services
             return _context.ClientDeaths.Include(c => c.ClientPolicyId).Where(c => c.ClientPolicy.ClientId == clientID).ToList();
         }
 
-        public IEnumerable<ClientPolicy> ViewClientPolicies(int clientID,int agentID,int policytermID)
+        public IEnumerable<ClientPolicy> ViewClientPolicies(int clientID)
         {
-            return _context.ClientPolicies.Include(c => c.ClientId == clientID && c.AgentId==agentID && c.PolicyTermId==policytermID).ToList() ?? throw new NullReferenceException();
-           
+            IEnumerable<ClientPolicy> clientpolicies = new List<ClientPolicy>();
+            //foreach (var _clientpolicy in _context.ClientPolicies)
+            //     if(_clientpolicy.ClientId == _clientID)
+            //     {
+            //         clientpolicies.Append(_clientpolicy);
+            //     }
+            clientpolicies = _context.ClientPolicies.ToList().Where(c => c.ClientId == clientID);
+            return clientpolicies;
         }
 
         public IEnumerable<Nominee> ViewNominees(int clientID)
