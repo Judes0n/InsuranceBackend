@@ -20,12 +20,14 @@ namespace Insurance.Controllers
         UserService _userService;
         CompanyService _companyService;
         AgentService _agentService;
+        InsuranceDbContext _dbContext;
         public UserController()
         {
             _clientService = new ClientServices();
             _agentService = new AgentService();
             _companyService = new CompanyService();
             _userService = new UserService();
+            _dbContext = new();
         }
         [HttpPost]
         [Route("Register")]
@@ -150,7 +152,14 @@ namespace Insurance.Controllers
             return BadRequest("User Doesn't Exist!");
             
         }
-     
+
+        [HttpGet]
+        [Route("GetAllUsers")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            return Ok(await _dbContext.Users.ToListAsync());
+        }
+
     }
 
 }

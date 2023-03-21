@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace InsuranceBackend.Models;
 
-public partial class InsuranceDbContext : DbContext
+public partial class InsuranceDbContext : IdentityDbContext
 {
     public InsuranceDbContext()
     {
