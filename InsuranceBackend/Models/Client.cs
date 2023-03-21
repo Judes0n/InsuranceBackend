@@ -8,7 +8,7 @@ public partial class Client
 {
     public int ClientId { get; set; }
 
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public string? ClientName { get; set; }
 
@@ -31,5 +31,4 @@ public partial class Client
     public virtual ICollection<Nominee> Nominees { get; } = new List<Nominee>();
 
     public virtual User? User { get; set; }
-
 }

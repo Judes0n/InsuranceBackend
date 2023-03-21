@@ -1,4 +1,5 @@
 ﻿using InsuranceBackend.Models;
+
 namespace InsuranceBackend.Services
 {
     public class AdminService

@@ -1,7 +1,7 @@
-﻿using InsuranceBackend.Models;
-using InsuranceBackend.Enum;
+﻿using InsuranceBackend.Enum;
 using System;
 using Microsoft.EntityFrameworkCore;
+using InsuranceBackend.Models;
 
 namespace InsuranceBackend.Services
 {

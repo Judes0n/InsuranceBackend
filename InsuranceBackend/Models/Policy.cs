@@ -8,7 +8,7 @@ public partial class Policy
 {
     public int PolicyId { get; set; }
 
-    public int CompanyId { get; set; }
+    public int? CompanyId { get; set; }
 
     public int? PolicytypeId { get; set; }
 

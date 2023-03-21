@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using InsuranceBackend.Models;
 using InsuranceBackend.Services;
 using InsuranceBackend.Enum;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Net;
 using System.Reflection;
 using System;
+using InsuranceBackend.Models;
 
 namespace Insurance.Controllers
 {

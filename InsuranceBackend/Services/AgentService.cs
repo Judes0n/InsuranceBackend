@@ -1,5 +1,5 @@
-﻿using InsuranceBackend.Models;
-using InsuranceBackend.Enum;
+﻿using InsuranceBackend.Enum;
+using InsuranceBackend.Models;
 
 namespace InsuranceBackend.Services
 {

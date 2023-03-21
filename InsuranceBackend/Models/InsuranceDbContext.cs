@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace InsuranceBackend.Models;
 
-public partial class InsuranceDbContext : IdentityDbContext
+public partial class InsuranceDbContext : DbContext
 {
     public InsuranceDbContext()
     {
@@ -88,19 +87,21 @@ public partial class InsuranceDbContext : IdentityDbContext
 
         modelBuilder.Entity<AgentCompany>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("AgentCompany");
+            entity.HasKey(e => e.Id).HasName("PK__AgentCom__3213E83F8DF4835B");
 
+            entity.ToTable("AgentCompany");
+
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AgentId).HasColumnName("agentID");
             entity.Property(e => e.CompanyId).HasColumnName("companyID");
+            entity.Property(e => e.Status).HasColumnName("status");
 
-            entity.HasOne(d => d.Agent).WithMany()
+            entity.HasOne(d => d.Agent).WithMany(p => p.AgentCompanies)
                 .HasForeignKey(d => d.AgentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AgentCompany_Agents");
 
-            entity.HasOne(d => d.Company).WithMany()
+            entity.HasOne(d => d.Company).WithMany(p => p.AgentCompanies)
                 .HasForeignKey(d => d.CompanyId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_AgentCompany_Companies");
@@ -121,6 +122,10 @@ public partial class InsuranceDbContext : IdentityDbContext
                 .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("dob");
+            entity.Property(e => e.Email)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("email");
             entity.Property(e => e.Gender)
                 .HasMaxLength(10)
                 .IsUnicode(false)
