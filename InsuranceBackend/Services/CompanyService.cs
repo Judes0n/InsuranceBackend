@@ -46,22 +46,8 @@ namespace InsuranceBackend.Services
             _context.SaveChanges();
             return GetCompany(companyID);
         }
-        public IEnumerable<AgentCompany> ViewAgents(int companyID)
-        {
-            return _context.AgentCompanies.Include(a=>a.CompanyId==companyID).ToList();
-        }
-        //Approvals
-        public void SetCompanyStatus(int _companyID,ActorStatusEnum e)
-        {
-            var dbcompany = GetCompany(_companyID);
-            if (!ActorStatusEnum.IsDefined(typeof(ActorStatusEnum), e))
-            {
-                throw new Exception();
-            }
-            dbcompany.Status = e;
-            UpdateCompany(_companyID,dbcompany);
-        }
-        public void AddPolicy(Policy policy,int companyID)
+
+        public void AddPolicy(Policy policy, int companyID)
         {
             ValidatePolicy(policy);
             policy.Status = StatusEnum.Inactive;
@@ -70,16 +56,55 @@ namespace InsuranceBackend.Services
             _context.SaveChangesAsync();
         }
 
+        //Status
+        public void SetCompanyStatus(int _companyID, ActorStatusEnum e)
+        {
+            var dbcompany = GetCompany(_companyID);
+            if (!ActorStatusEnum.IsDefined(typeof(ActorStatusEnum), e))
+            {
+                throw new Exception();
+            }
+            dbcompany.Status = e;
+            UpdateCompany(_companyID, dbcompany);
+        }
+
+        public void ChangeAgentRequest(int agentID, StatusEnum e)
+        {
+            ValidateAgentRequest(agentID);
+            var dbreq = _context.AgentCompanies.FirstOrDefault(a => a.AgentId == agentID) ?? throw new ArgumentNullException();
+            if (!StatusEnum.IsDefined(typeof(StatusEnum), e))
+            {
+                throw new Exception();
+            }
+            dbreq.Status = e;
+            _context.AgentCompanies.Update(dbreq);
+            _context.SaveChanges();
+        }
+        
+        //Views
+        public IEnumerable<AgentCompany> ViewAgents(int companyID)
+        {
+            return _context.AgentCompanies.Include(a=>a.CompanyId==companyID).ToList();
+        }
+        
+      
+
         public IEnumerable<Policy> ViewPolicies(int companyID)
         {
             return _context.Policies.Include(p=>p.CompanyId==companyID).ToList();
         }
+
+
         //Validations
         private void ValidatePolicy(Policy policy)
         {   
-            var policytypeID=_context.PolicyTypes.Select(p=>p.PolicytypeId==policy.PolicytypeId);
-            if (policytypeID==null)
-                throw new ArgumentNullException(null, nameof(policytypeID));   
+            var policytypeID=_context.PolicyTypes.Select(p=>p.PolicytypeId==policy.PolicytypeId) ?? throw new ArgumentNullException(null,nameof(policy));
+
+        }
+
+        private void ValidateAgentRequest(int agentID)
+        {
+            var dbreq = _context.AgentCompanies.FirstOrDefault(s => s.AgentId == agentID) ?? throw new NullReferenceException();
         }
     }
 }

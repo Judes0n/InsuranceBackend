@@ -25,4 +25,9 @@ public partial class Policy
     public virtual ICollection<PolicyTerm> PolicyTerms { get; } = new List<PolicyTerm>();
 
     public virtual PolicyType? Policytype { get; set; }
+
+    public static explicit operator Policy(List<Policy> v)
+    {
+        throw new NotImplementedException();
+    }
 }

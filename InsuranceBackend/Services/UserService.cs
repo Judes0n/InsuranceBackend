@@ -10,6 +10,8 @@ namespace InsuranceBackend.Services
         {
             _context=new InsuranceDbContext();
         }
+
+
         public User? GetUser(string userName)
         {
             var validUser = _context.Users.Where(u => u.UserName == userName).FirstOrDefault();

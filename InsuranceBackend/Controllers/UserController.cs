@@ -102,9 +102,9 @@ namespace Insurance.Controllers
                                 break;
                             }
                     }
-                    return Ok("Client Registered!");
+                    return Ok("User Registered!");
                 }
-                return BadRequest("Client Registration Failed!!");
+                return BadRequest("User Registration Failed!!");
                 
             }
             else if (logUser.UserName == user.UserName)
@@ -122,27 +122,27 @@ namespace Insurance.Controllers
             var logUser = _userService.GetUser(user.UserName);
             if (logUser != null)
             {
-                if (logUser.UserName == user.UserName || logUser.Password== user.Password)
+                if (logUser.UserName == user.UserName && logUser.Password== user.Password)
                 {
                     switch (logUser.Type)
                     {
                         case UserTypeEnum.Client:
                             {
-                                return Ok("Client Login");
+                                return Ok("Client");
 
                             }
                         case UserTypeEnum.Agent:
                             {
-                                return Ok("Agent Login");
+                                return Ok("Agent");
 
                             }
                         case UserTypeEnum.Company:
                             {
-                                return Ok("Company Login");
+                                return Ok("Company");
                             }
                         case UserTypeEnum.Admin:
                             {
-                                return Ok("Admin Login");
+                                return Ok("Admin");
                             }
                     }
                 }

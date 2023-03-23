@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsuranceBackend.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -11,7 +12,7 @@ public partial class AgentCompany
 
     public int CompanyId { get; set; }
 
-    public int? Status { get; set; }
+    public StatusEnum Status { get; set; }
 
     public virtual Agent Agent { get; set; } = null!;
 

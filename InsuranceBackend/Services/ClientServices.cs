@@ -93,6 +93,7 @@ namespace InsuranceBackend.Services
 
         public void AddNominee(Nominee nominee)
         {
+            ValidateNominee(nominee);
             _context.Nominees.Add(nominee);
             _context.SaveChangesAsync();
         }
@@ -131,8 +132,12 @@ namespace InsuranceBackend.Services
 
         public IEnumerable<Nominee> ViewNominees(int clientID)
         {
+            ValidateClient(clientID);
            return _context.Nominees.Include(n=>n.ClientId == clientID).ToList();
-        }       
+        }     
+        
+       
+
         //Validations
         private void ValidatePremium(Premium premium)
         {
@@ -178,5 +183,17 @@ namespace InsuranceBackend.Services
                 throw new ArgumentNullException(null, nameof(clientPolicy.ClientId));
         }
         
+        private void ValidateNominee(Nominee nominee)
+        {
+            if (nominee == null)
+                throw new ArgumentNullException(nameof(nominee));
+            else if (!ValidateClient(nominee.ClientId))
+                throw new ArgumentException(null, nameof(nominee));
+        }
+
+        private bool ValidateClient(int? clientId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
