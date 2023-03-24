@@ -124,27 +124,7 @@ namespace Insurance.Controllers
             {
                 if (logUser.UserName == user.UserName && logUser.Password== user.Password)
                 {
-                    switch (logUser.Type)
-                    {
-                        case UserTypeEnum.Client:
-                            {
-                                return Ok("Client");
-
-                            }
-                        case UserTypeEnum.Agent:
-                            {
-                                return Ok("Agent");
-
-                            }
-                        case UserTypeEnum.Company:
-                            {
-                                return Ok("Company");
-                            }
-                        case UserTypeEnum.Admin:
-                            {
-                                return Ok("Admin");
-                            }
-                    }
+                    return Ok(logUser);
                 }
                 else 
                     return BadRequest("Invalid Credentials");
