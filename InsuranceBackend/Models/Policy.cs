@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsuranceBackend.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -17,11 +18,16 @@ public partial class Policy
 
     public decimal? PolicyAmount { get; set; }
 
-    public int Status { get; set; }
+    public StatusEnum Status { get; set; }
 
     public virtual Company? Company { get; set; }
 
     public virtual ICollection<PolicyTerm> PolicyTerms { get; } = new List<PolicyTerm>();
 
     public virtual PolicyType? Policytype { get; set; }
+
+    public static explicit operator Policy(List<Policy> v)
+    {
+        throw new NotImplementedException();
+    }
 }
