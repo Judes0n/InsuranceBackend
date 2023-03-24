@@ -27,6 +27,8 @@ public partial class InsuranceDbContext : DbContext
 
     public virtual DbSet<Company> Companies { get; set; }
 
+    public virtual DbSet<Feedback> Feedbacks { get; set; }
+
     public virtual DbSet<Maturity> Maturities { get; set; }
 
     public virtual DbSet<Nominee> Nominees { get; set; }
@@ -42,6 +44,7 @@ public partial class InsuranceDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -226,6 +229,17 @@ public partial class InsuranceDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.Companies)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_Companies_Users");
+        });
+
+        modelBuilder.Entity<Feedback>(entity =>
+        {
+            entity.HasKey(e => e.Fid);
+
+            entity.Property(e => e.Fid).HasColumnName("fid");
+            entity.Property(e => e.Feed)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("feed");
         });
 
         modelBuilder.Entity<Maturity>(entity =>

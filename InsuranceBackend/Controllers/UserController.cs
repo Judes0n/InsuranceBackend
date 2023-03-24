@@ -128,21 +128,21 @@ namespace Insurance.Controllers
                     {
                         case UserTypeEnum.Client:
                             {
-                                return Ok("Client");
+                                return Ok(logUser);
 
                             }
                         case UserTypeEnum.Agent:
                             {
-                                return Ok("Agent");
+                                return Ok(logUser);
 
                             }
                         case UserTypeEnum.Company:
                             {
-                                return Ok("Company");
+                                return Ok(logUser);
                             }
                         case UserTypeEnum.Admin:
                             {
-                                return Ok("Admin");
+                                return Ok(logUser);
                             }
                     }
                 }

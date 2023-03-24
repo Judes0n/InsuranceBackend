@@ -1,5 +1,4 @@
-﻿using InsuranceBackend.Enum;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -8,7 +7,7 @@ public partial class ClientPolicy
 {
     public int ClientPolicyId { get; set; }
 
-    public int ClientId { get; set; }
+    public int? ClientId { get; set; }
 
     public int? PolicyTermId { get; set; }
 
@@ -16,7 +15,7 @@ public partial class ClientPolicy
 
     public string? ExpDate { get; set; }
 
-    public StatusEnum Status { get; set; }
+    public int? Status { get; set; }
 
     public int AgentId { get; set; }
 
