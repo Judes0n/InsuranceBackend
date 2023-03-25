@@ -27,6 +27,8 @@ public partial class InsuranceDbContext : DbContext
 
     public virtual DbSet<Company> Companies { get; set; }
 
+    public virtual DbSet<Feedbacks> Feedbacks { get; set; }
+
     public virtual DbSet<Maturity> Maturities { get; set; }
 
     public virtual DbSet<Nominee> Nominees { get; set; }
@@ -327,6 +329,21 @@ public partial class InsuranceDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("policytypeName");
         });
+
+
+        modelBuilder.Entity<Feedbacks>(entity =>
+        {
+            entity.HasKey(e => e.Fid).HasName("PK_Type");
+
+            entity.ToTable("Feedbacks");
+
+            entity.Property(e => e.Fid).HasColumnName("fid");
+            entity.Property(e => e.Feed)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("feed");
+        });
+
 
         modelBuilder.Entity<Premium>(entity =>
         {

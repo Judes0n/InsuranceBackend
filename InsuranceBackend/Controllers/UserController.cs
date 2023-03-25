@@ -8,6 +8,8 @@ using System.Net;
 using System.Reflection;
 using System;
 using InsuranceBackend.Models;
+using Microsoft.Net.Http.Headers;
+using System.Numerics;
 
 namespace Insurance.Controllers
 {
@@ -140,6 +142,54 @@ namespace Insurance.Controllers
             return Ok(await _dbContext.Users.ToListAsync());
         }
 
+        [HttpPost]
+        [Route("Uploads")]
+
+        public IActionResult Upload()
+        {
+            try
+            {
+                var file = Request.Form.Files[0];
+                int type= _userService.ConvertFileContentsToInt(Request.Form.Files[1]);
+                var folderName = Path.Combine("Resources", "Images" , "Clients");
+                switch (type)
+                {
+                    case 1:
+                        {
+                            folderName = Path.Combine("Resources", "Images" , "Companies");
+                            break;
+                        }
+                    case 2:
+                        { folderName = Path.Combine("Resources", "Images", "Agents");
+                            break;
+                        }
+                    case 3:
+                        {
+                            folderName = Path.Combine("Resources", "Images", "Clients");
+                            break;
+                        }
+                }
+              
+                var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
+                if(file.Length > 0)
+                {
+                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim().ToString();
+                    var fullPath = Path.Combine(pathToSave, fileName);
+                    var dbPath = Path.Combine(folderName, fileName);
+                    using var stream = new FileStream(fullPath, FileMode.Create);
+                    file.CopyTo(stream);
+                    return Ok(new { dbPath });
+                }
+                else
+                {
+                    return BadRequest("File Upload Failed");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 
 }
