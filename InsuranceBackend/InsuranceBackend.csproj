@@ -28,4 +28,11 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Resources\Images\Companies\" />
+    <Folder Include="Resources\Images\Agents\" />
+    <Folder Include="Resources\Images\Clients\" />
+    <Folder Include="Resources\Images\Policies\" />
+  </ItemGroup>
+
 </Project>
