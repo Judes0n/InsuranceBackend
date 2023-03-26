@@ -25,18 +25,5 @@ namespace InsuranceBackend.Services
             _context.SaveChangesAsync();
             return user;
         }
-
-        public int ConvertFileContentsToInt(IFormFile file)
-        {
-            using var streamReader = new StreamReader(file.OpenReadStream(), Encoding.UTF8);
-            var contents = streamReader.ReadToEnd();
-
-            if (!int.TryParse(contents, out var result))
-            {
-                throw new ArgumentException("Invalid file contents. Cannot convert to int.");
-            }
-
-            return result;
-        }
     }
 }

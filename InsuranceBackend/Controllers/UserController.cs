@@ -150,7 +150,7 @@ namespace Insurance.Controllers
             try
             {
                 var file = Request.Form.Files[0];
-                int type= _userService.ConvertFileContentsToInt(Request.Form.Files[1]);
+                int type= int.Parse(Request.Form["type"]!);
                 var folderName = Path.Combine("Resources", "Images" , "Clients");
                 switch (type)
                 {
