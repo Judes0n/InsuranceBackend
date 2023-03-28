@@ -10,7 +10,7 @@ public partial class Client
 
     public int? UserId { get; set; }
 
-    public string? ClientName { get; set; }
+    public string ClientName { get; set; }
 
     public string? Gender { get; set; }
 

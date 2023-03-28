@@ -1,4 +1,5 @@
 ﻿using InsuranceBackend.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 
@@ -20,10 +21,16 @@ namespace InsuranceBackend.Services
         }
 
         public User AddUser(User user)
-        {   
+        {
             _context.Users.Add(user);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             return user;
+        }
+
+        public void DeleteUser(User user)
+        {
+            _context.Users.Remove(user);
+            _context.SaveChanges();
         }
     }
 }

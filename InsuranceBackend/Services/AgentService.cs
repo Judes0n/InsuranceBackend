@@ -14,9 +14,18 @@ namespace InsuranceBackend.Services
         }
         public Agent AddAgent(Agent agent)
         {
-            _context.Agents.Add(agent);
-            _context.SaveChanges();
-            return GetAgent(agent.AgentId);
+            try
+            {
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
+                _context.Agents.Add(agent);
+                _context.SaveChanges();
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+            return GetAgentByName(agent.AgentName);
         }
         public Agent GetAgent(int agentID)
         {
@@ -24,6 +33,11 @@ namespace InsuranceBackend.Services
             return res ?? throw new Exception();
         }
 
+        public Agent GetAgentByName(string agentName)
+        {
+            var res = _context.Agents.Find(agentName);
+            return res ?? throw new Exception();
+        }
         public void DeleteAgent(int agentID)
         {
             var dbagent = GetAgent(agentID);

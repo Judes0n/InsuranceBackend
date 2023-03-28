@@ -15,15 +15,30 @@ namespace InsuranceBackend.Services
         }
         public Company AddCompany(Company company)
         {
-            _context.Companies.Add(company);
-            _context.SaveChangesAsync();
-            return GetCompany(company.CompanyId);
+            try
+            {
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
+                _context.Companies.Add(company);
+                _context.SaveChangesAsync();
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
+            }
+            catch (Exception) 
+            {
+                throw new Exception(null);
+            }
+            return GetCompanyByName(company.CompanyName);
         }
 
         public Company GetCompany(int companyID)
         {
             var res = _context.Companies.Find(companyID);
-            return res == null ? throw new Exception() : res;
+            return res ?? throw new Exception();
+        }
+
+        public Company GetCompanyByName(string companyName)
+        {
+            var res = _context.Companies.Find(companyName);
+            return res ?? throw new Exception();
         }
         public IEnumerable<Company> GetAllCompanies()
         {

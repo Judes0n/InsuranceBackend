@@ -10,7 +10,7 @@ public partial class Company
 
     public int? UserId { get; set; }
 
-    public string? CompanyName { get; set; }
+    public string CompanyName { get; set; }
 
     public string? Address { get; set; }
 

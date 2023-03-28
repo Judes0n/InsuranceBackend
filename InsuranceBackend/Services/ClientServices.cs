@@ -1,5 +1,7 @@
 ﻿using InsuranceBackend.Enum;
 using InsuranceBackend.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -19,7 +21,7 @@ namespace InsuranceBackend.Services
             return res ?? throw new Exception();
         }
 
-        public Client GetClient(string userName)
+        public Client GetClientByName(string userName)
         {
             return _context.Clients.Find(userName)?? throw new DataMisalignedException(nameof(userName));
         }
@@ -47,9 +49,22 @@ namespace InsuranceBackend.Services
   
         public Client AddClient(Client client)
         {
-            _context.Clients.Add(client);
-            _context.SaveChanges(true);
-            return GetClient(client.ClientId);
+            try
+            {
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
+                _context.Clients.Add(client);
+                _context.SaveChanges();
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
+            }
+            catch (Exception)
+            {
+                throw new Exception(null);
+            }
+            //var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            //con.Open();
+            //var cmd = new SqlCommand("INSERT INTO Clients(userID,clientName,gender,dob,address,profilePic,phoneNum,email,status) VALUES('" + client.UserId + "','" + client.ClientName + "','Male','Dob','Address','" + client.ProfilePic + "','" + client.PhoneNum + "','" + client.Email + "',0)", con);
+            //cmd.ExecuteNonQuery();
+            return GetClientByName(client.ClientName);
         }
         //approvals
         public void ChangeClientStatus(int _clientID,ActorStatusEnum e)
