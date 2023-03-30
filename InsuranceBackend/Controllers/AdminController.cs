@@ -70,6 +70,14 @@ namespace InsuranceBackend.Controllers
             return Ok(_dbContext.Feedbacks.ToList());
         }
 
+        [HttpGet]
+        [Route("GetPolicyTerms")]
+
+        public IActionResult GetTerms(int policyId)
+        {
+            return Ok(_dbContext.PolicyTerms.Where(pt=>pt.PolicyId==policyId).ToList());
+        }
+
         [HttpPut]
         [Route("ChangePolicyStatus")]
 

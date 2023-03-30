@@ -1,6 +1,8 @@
 ﻿using InsuranceBackend.Enum;
 using InsuranceBackend.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace InsuranceBackend.Services
 {
@@ -16,9 +18,11 @@ namespace InsuranceBackend.Services
         {
             try
             {
-                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
-                _context.Agents.Add(agent);
-                _context.SaveChanges();
+                var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+                con.Open();
+                var cmd = new SqlCommand("INSERT INTO Agents(userID,agentName,gender,phoneNum,dob,email,address,grade,profilePic,status) VALUES('" + agent.UserId + "','" + agent.AgentName + "','" + agent.Gender + "','" + agent.PhoneNum + "','dob','" + agent.Email + "','Address','1','" + agent.ProfilePic + "',0)", con);
+                cmd.ExecuteNonQuery();
+                con.Close();
                 //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
             }
             catch (Exception)
@@ -29,13 +33,13 @@ namespace InsuranceBackend.Services
         }
         public Agent GetAgent(int agentID)
         {
-            var res = _context.Agents.Find(agentID);
+            var res = _context.Agents.FirstOrDefault(a=>a.AgentId==agentID);
             return res ?? throw new Exception();
         }
 
         public Agent GetAgentByName(string agentName)
         {
-            var res = _context.Agents.Find(agentName);
+            var res = _context.Agents.FirstOrDefault(a => a.AgentName == agentName);
             return res ?? throw new Exception();
         }
         public void DeleteAgent(int agentID)
