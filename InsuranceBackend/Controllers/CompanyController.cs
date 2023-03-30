@@ -21,12 +21,12 @@ namespace InsuranceBackend.Controllers
         [HttpPost]
         [Route("AddPolicy")]
 
-        public async Task<IActionResult> AddPolicy(Policy policy , int companyID)
+        public async Task<IActionResult> AddPolicy(Policy policy)
         {
             if (policy == null)
                 throw new ArgumentNullException(nameof(policy));
-             _companyService.AddPolicy(policy, companyID);
-             return Ok("Policy Added");
+             _companyService.AddPolicy(policy);
+             return Ok(policy);
         }
 
         [HttpGet]
@@ -43,6 +43,14 @@ namespace InsuranceBackend.Controllers
         public IEnumerable<AgentCompany> ViewAgents(int companyID)
         {
             return _companyService.ViewAgents(companyID);
+        }
+
+        [HttpGet]
+        [Route("GetCompany")]
+
+        public Company GetCompany(int userID) 
+        { 
+            return _companyService.GetCompany(userID);
         }
     } 
 }

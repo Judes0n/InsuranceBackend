@@ -31,9 +31,9 @@ namespace InsuranceBackend.Services
             return GetCompanyByName(company.CompanyName);
         }
 
-        public Company GetCompany(int companyID)
+        public Company GetCompany(int userID)
         {
-            var res = _context.Companies.Find(companyID);
+            var res = _context.Companies.FirstOrDefault(c=>c.UserId == userID);
             return res ?? throw new Exception();
         }
 
@@ -64,11 +64,10 @@ namespace InsuranceBackend.Services
             return GetCompany(companyID);
         }
 
-        public void AddPolicy(Policy policy, int companyID)
+        public void AddPolicy(Policy policy)
         {
             ValidatePolicy(policy);
             policy.Status = StatusEnum.Inactive;
-            policy.CompanyId = companyID;
             _context.Policies.Add(policy);
             _context.SaveChangesAsync();
         }
