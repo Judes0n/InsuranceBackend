@@ -17,10 +17,10 @@ namespace InsuranceBackend.Services
         {
             try
             {
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
+                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
                 _context.Companies.Add(company);
                 _context.SaveChangesAsync();
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
+                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
             }
             catch (Exception) 
             {

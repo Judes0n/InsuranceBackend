@@ -19,11 +19,11 @@ namespace Insurance.Controllers
 
     public class UserController : ControllerBase
     {
-        ClientServices _clientService;
-        UserService _userService;
-        CompanyService _companyService;
-        AgentService _agentService;
-        InsuranceDbContext _dbContext;
+        readonly ClientServices _clientService;
+        readonly UserService _userService;
+        readonly CompanyService _companyService;
+        readonly AgentService _agentService;
+        readonly InsuranceDbContext _dbContext;
         public UserController()
         {
             _clientService = new ClientServices();
@@ -45,7 +45,7 @@ namespace Insurance.Controllers
                 Type     = (UserTypeEnum)Enum.Parse(typeof(UserTypeEnum), Request.Form["Type"].ToString()),
                 Status   = StatusEnum.Inactive,
             };
-            var logUser = _userService.GetUser(user.UserName);
+            var logUser = _userService.GetUserByName(user.UserName);
             if (logUser == null)
             {
                 user.Type = UserTypeEnum.Client;
@@ -90,7 +90,7 @@ namespace Insurance.Controllers
                             case UserTypeEnum.Client:
                                 {
                                     Client client = new();
-                                    var dbuser = _userService.GetUser(user.UserName);
+                                    var dbuser = _userService.GetUserByName(user.UserName);
                                     if (dbuser != null)
                                     {
                                         //client.ClientId = -1;
@@ -102,7 +102,7 @@ namespace Insurance.Controllers
                                         client.ProfilePic = dbPath;
                                         client.PhoneNum = 911234567890;
                                         client.Email = email;
-                                        client.Status = ActorStatusEnum.Unapproved;
+                                        client.Status =(int) ActorStatusEnum.Unapproved;
                                         //client.User = dbuser;
                                         _clientService.AddClient(client);
                                     }
@@ -111,7 +111,7 @@ namespace Insurance.Controllers
                             case UserTypeEnum.Agent:
                                 {
                                     Agent agent = new();
-                                    var dbagent = _userService.GetUser(user.UserName);
+                                    var dbagent = _userService.GetUserByName(user.UserName);
                                     if (dbagent != null)
                                     {
                                         agent.UserId = dbagent.UserId;
@@ -123,7 +123,7 @@ namespace Insurance.Controllers
                                         agent.Address = "Address";
                                         agent.Grade = 0;
                                         agent.ProfilePic = dbPath;
-                                        agent.Status = ActorStatusEnum.Unapproved;
+                                        agent.Status =(int) ActorStatusEnum.Unapproved;
                                         _agentService.AddAgent(agent);
                                     }
 
@@ -132,7 +132,7 @@ namespace Insurance.Controllers
                             case UserTypeEnum.Company:
                                 {
                                     Company company = new();
-                                    var dbcompany = _userService.GetUser(user.UserName);
+                                    var dbcompany = _userService.GetUserByName(user.UserName);
                                     if (dbcompany != null)
                                     {
                                         company.UserId = dbcompany.UserId;
@@ -141,7 +141,7 @@ namespace Insurance.Controllers
                                         company.Email = email;
                                         company.PhoneNum = 0;
                                         company.ProfilePic = dbPath;
-                                        company.Status = ActorStatusEnum.Unapproved;
+                                        company.Status =(int) ActorStatusEnum.Unapproved;
                                         _companyService.AddCompany(company);
                                     }
                                     break;
@@ -170,7 +170,7 @@ namespace Insurance.Controllers
 
         public async Task<IActionResult> Login([FromBody] User user)
         {
-            var logUser = _userService.GetUser(user.UserName);
+            var logUser = _userService.GetUserByName(user.UserName);
             if (logUser != null)
             {
                 if (logUser.UserName == user.UserName && logUser.Password== user.Password)
@@ -188,7 +188,7 @@ namespace Insurance.Controllers
         [Route("GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
-            return Ok(await _dbContext.Users.ToListAsync());
+            return Ok(await _dbContext.Users.Where(u=>u.Type!=0).ToListAsync());
         }
 
         [HttpPost]
@@ -239,6 +239,24 @@ namespace Insurance.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("GetUserByName")]
+
+        public IActionResult GetUserByName(string username)
+        {
+            return Ok(_userService.GetUserByName(username)) ?? throw new Exception("Username not Found");
+        }
+
+        [HttpGet]
+        [Route("GetUser")]
+
+        public IActionResult GetUser(int userId)
+        {
+            return Ok(_userService.GetUser(userId)) ?? throw new Exception("Username not Found");
+        }
+
+
     }
 
 }

@@ -1,4 +1,5 @@
-﻿using InsuranceBackend.Models;
+﻿using InsuranceBackend.Enum;
+using InsuranceBackend.Models;
 using InsuranceBackend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,14 +10,81 @@ namespace InsuranceBackend.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
-    {   
-        UserService _userService;
-        InsuranceDbContext _dbContext;
+    {
+        private readonly UserService _userService;
+        private readonly AdminService _adminService;
+        private readonly InsuranceDbContext _dbContext;
         public AdminController()
         {
             _userService = new();
+            _adminService = new();
             _dbContext = new();
         }
-       
+
+        [HttpPut]
+        [Route("ChangeUserStatus")]
+
+        public IActionResult ChangeStatus(User user)
+        {
+            _adminService.ChangeUserStatus(user);
+            return Ok("Status Changed");
+        }
+
+        [HttpPost]
+        [Route("AddPolicyType")]
+
+        public IActionResult AddType(PolicyType policyType) 
+        { 
+            return Ok(_adminService.AddPolicytype(policyType));
+        }
+
+        [HttpGet]
+        [Route("GetAllTypes")]
+
+        public IActionResult GetAllTypes()
+        {
+            return Ok(_dbContext.PolicyTypes.ToList());
+        }
+
+        [HttpGet]
+        [Route("GetAllPolicies")]
+
+        public IActionResult GetAll()
+        {
+            return Ok(_adminService.GetAllPolicies());
+        }
+
+        [HttpGet]
+        [Route("GetAllMaturities")]
+
+        public IActionResult GetAllMaturities()
+        {
+            return Ok(_dbContext.Maturities.ToList());
+        }
+
+        [HttpGet]
+        [Route("GetFeedbacks")]
+
+        public IActionResult GetFeeds()
+        {
+            return Ok(_dbContext.Feedbacks.ToList());
+        }
+
+        [HttpPut]
+        [Route("ChangePolicyStatus")]
+
+        public IActionResult UpdatePolicy(Policy policy)
+        {
+            _adminService.ChangePolicyStatus(policy);
+            return Ok("Status Updated");
+        }
+
+        [HttpGet]
+        [Route("GetPolicy")]
+
+        public IActionResult GetPolicy(int policyId) 
+        {
+            return Ok(_dbContext.Policies.FirstOrDefault(p => p.PolicyId == policyId));
+        }
     }
 }

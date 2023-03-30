@@ -16,10 +16,10 @@ namespace InsuranceBackend.Services
         {
             try
             {
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
+                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
                 _context.Agents.Add(agent);
                 _context.SaveChanges();
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
+                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
             }
             catch (Exception)
             {
@@ -78,7 +78,7 @@ namespace InsuranceBackend.Services
             {
                 throw new NullReferenceException(null);
             }
-            dbclientpolicy.Status = e;
+            dbclientpolicy.Status =(int) e;
             _context.ClientPolicies.Update(dbclientpolicy);
             _context.SaveChanges();
         }

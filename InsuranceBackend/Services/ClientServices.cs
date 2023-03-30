@@ -17,13 +17,13 @@ namespace InsuranceBackend.Services
         }
         public Client GetClient(int clientID) 
         {
-            var res = _context.Clients.Find(clientID);
+            var res = _context.Clients.FirstOrDefault(c=>c.ClientId==clientID);
             return res ?? throw new Exception();
         }
 
         public Client GetClientByName(string userName)
         {
-            return _context.Clients.Find(userName)?? throw new DataMisalignedException(nameof(userName));
+            return _context.Clients.FirstOrDefault(c=>c.ClientName==userName)?? throw new DataMisalignedException(nameof(userName));
         }
         public IEnumerable<Client> GetAllClient()
         { 
@@ -51,10 +51,17 @@ namespace InsuranceBackend.Services
         {
             try
             {
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
-                _context.Clients.Add(client);
-                _context.SaveChanges();
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
+                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
+                //_context.Clients.Add(client);
+                //_context.SaveChanges();
+                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
+
+                var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+                con.Open();
+                var cmd = new SqlCommand("INSERT INTO Clients(userID,clientName,gender,dob,address,profilePic,phoneNum,email,status) VALUES('" + client.UserId + "','" + client.ClientName + "','" + client.Gender + "','Dob','Address','" + client.ProfilePic + "','" + client.PhoneNum + "','" + client.Email + "',0)", con);
+                cmd.ExecuteNonQuery();
+                con.Close();
+                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
             }
             catch (Exception)
             {
@@ -141,7 +148,7 @@ namespace InsuranceBackend.Services
             //     {
             //         clientpolicies.Append(_clientpolicy);
             //     }
-            clientpolicies = _context.ClientPolicies.ToList().Where(c => c.ClientId == clientID);
+            clientpolicies = _context.ClientPolicies.Where(c => c.ClientId == clientID).ToList();
             return clientpolicies;
         }
 

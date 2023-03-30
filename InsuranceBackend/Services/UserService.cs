@@ -14,16 +14,27 @@ namespace InsuranceBackend.Services
         }
 
 
-        public User? GetUser(string userName)
+        public User GetUserByName(string userName)
         {
-            var validUser = _context.Users.Where(u => u.UserName == userName).FirstOrDefault();
+            var validUser = _context.Users.FirstOrDefault(u=>u.UserName==userName);
             return validUser;
         }
 
+        public User? GetUser(int userID)
+        {
+            var validUser = _context.Users.FirstOrDefault(u=>u.UserId == userID);
+            return validUser;
+        }
         public User AddUser(User user)
         {
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            //user.UserId = -1;
+            var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            con.Open();
+            var cmd = new SqlCommand("INSERT INTO Users(userName,password,type,status) VALUES('" + user.UserName + "','" + user.Password + "','" +(int)user.Type + "',0)", con);
+            cmd.ExecuteNonQuery();
+            con.Close();
+            //_context.Users.Add(user);
+            //_context.SaveChanges();
             return user;
         }
 

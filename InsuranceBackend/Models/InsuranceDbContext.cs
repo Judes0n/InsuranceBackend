@@ -27,11 +27,13 @@ public partial class InsuranceDbContext : DbContext
 
     public virtual DbSet<Company> Companies { get; set; }
 
-    public virtual DbSet<Feedbacks> Feedbacks { get; set; }
+    public virtual DbSet<Feedback> Feedbacks { get; set; }
 
     public virtual DbSet<Maturity> Maturities { get; set; }
 
     public virtual DbSet<Nominee> Nominees { get; set; }
+
+    public virtual DbSet<Payment> Payments { get; set; }
 
     public virtual DbSet<Policy> Policies { get; set; }
 
@@ -44,7 +46,7 @@ public partial class InsuranceDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -89,7 +91,7 @@ public partial class InsuranceDbContext : DbContext
 
         modelBuilder.Entity<AgentCompany>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AgentCom__3213E83F8DF4835B");
+            entity.HasKey(e => e.Id).HasName("PK__AgentCom__3213E83FE027F7A3");
 
             entity.ToTable("AgentCompany");
 
@@ -175,6 +177,7 @@ public partial class InsuranceDbContext : DbContext
             entity.Property(e => e.ClientPolicyId).HasColumnName("clientPolicyID");
             entity.Property(e => e.AgentId).HasColumnName("agentID");
             entity.Property(e => e.ClientId).HasColumnName("clientID");
+            entity.Property(e => e.Counter).HasColumnName("counter");
             entity.Property(e => e.ExpDate)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -230,6 +233,17 @@ public partial class InsuranceDbContext : DbContext
                 .HasConstraintName("FK_Companies_Users");
         });
 
+        modelBuilder.Entity<Feedback>(entity =>
+        {
+            entity.HasKey(e => e.Fid);
+
+            entity.Property(e => e.Fid).HasColumnName("fid");
+            entity.Property(e => e.Feed)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("feed");
+        });
+
         modelBuilder.Entity<Maturity>(entity =>
         {
             entity.ToTable("Maturity");
@@ -276,6 +290,26 @@ public partial class InsuranceDbContext : DbContext
             entity.HasOne(d => d.Client).WithMany(p => p.Nominees)
                 .HasForeignKey(d => d.ClientId)
                 .HasConstraintName("FK_Nominees_Clients");
+        });
+
+        modelBuilder.Entity<Payment>(entity =>
+        {
+            entity.Property(e => e.PaymentId).HasColumnName("paymentID");
+            entity.Property(e => e.Amount)
+                .HasColumnType("money")
+                .HasColumnName("amount");
+            entity.Property(e => e.ClientPolicyId).HasColumnName("clientPolicyID");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Time)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("time");
+            entity.Property(e => e.TransactionId).HasColumnName("transactionID");
+
+            entity.HasOne(d => d.ClientPolicy).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.ClientPolicyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Payments_ClientPolicy");
         });
 
         modelBuilder.Entity<Policy>(entity =>
@@ -329,21 +363,6 @@ public partial class InsuranceDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("policytypeName");
         });
-
-
-        modelBuilder.Entity<Feedbacks>(entity =>
-        {
-            entity.HasKey(e => e.Fid).HasName("PK_Type");
-
-            entity.ToTable("Feedbacks");
-
-            entity.Property(e => e.Fid).HasColumnName("fid");
-            entity.Property(e => e.Feed)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .HasColumnName("feed");
-        });
-
 
         modelBuilder.Entity<Premium>(entity =>
         {
