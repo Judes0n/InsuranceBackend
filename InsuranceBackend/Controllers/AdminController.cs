@@ -45,6 +45,13 @@ namespace InsuranceBackend.Controllers
         {
             return Ok(_dbContext.PolicyTypes.ToList());
         }
+        [HttpGet]
+        [Route("GetAllAgents")]
+
+        public IActionResult GetAllAgent()
+        {
+            return Ok(_adminService.GetAllAgent());
+        }
 
         [HttpGet]
         [Route("GetAllPolicies")]

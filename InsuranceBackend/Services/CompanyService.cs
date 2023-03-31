@@ -20,7 +20,7 @@ namespace InsuranceBackend.Services
             {
                 var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
                 con.Open();
-                var cmd = new SqlCommand("INSERT INTO Agents(userID,companyName,address,email,phoneNum,profilePic,status) VALUES('" + company.UserId + "','" + company.CompanyName + "','Address','" + company.Email + "','" + company.PhoneNum + "','" + company.ProfilePic + "',0)", con);
+                var cmd = new SqlCommand("INSERT INTO Companies(userID,companyName,address,email,phoneNum,profilePic,status) VALUES('" + company.UserId + "','" + company.CompanyName + "','Address','" + company.Email + "','" + company.PhoneNum + "','" + company.ProfilePic + "',0)", con);
                 cmd.ExecuteNonQuery();
                 con.Close();
             }

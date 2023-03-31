@@ -48,12 +48,13 @@ namespace Insurance.Controllers
             var logUser = _userService.GetUserByName(user.UserName);
             if (logUser == null)
             {
-                user.Type = UserTypeEnum.Client;
-                user.Status = StatusEnum.Inactive;
-
                 var file = Request.Form.Files[0];
                 string email = Request.Form["email"].ToString();
-                string gender = Request.Form["gender"].ToString();
+                string gender = "";
+                if (user.Type != UserTypeEnum.Company)
+                {
+                    gender = Request.Form["gender"].ToString();
+                }
                 var folderName = Path.Combine("Resources", "Images", "Clients");
                 switch (user.Type)
                 {
