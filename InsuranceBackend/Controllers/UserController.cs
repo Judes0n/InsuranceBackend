@@ -32,9 +32,10 @@ namespace Insurance.Controllers
             _userService = new UserService();
             _dbContext = new();
         }
+
+        //Register
         [HttpPost]
         [Route("Register")]
-
         public async Task<IActionResult> Register()
         {
             User user = new()
@@ -148,7 +149,7 @@ namespace Insurance.Controllers
                                     break;
                                 }
                         }
-                        return Ok("User Registered!");
+                        return Ok(user);
                     }
                 }
                 catch (Exception ex)

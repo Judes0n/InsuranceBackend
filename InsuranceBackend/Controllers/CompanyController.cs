@@ -21,7 +21,7 @@ namespace InsuranceBackend.Controllers
         [HttpPost]
         [Route("AddPolicy")]
 
-        public async Task<IActionResult> AddPolicy(Policy policy)
+        public IActionResult AddPolicy(Policy policy)
         {
             if (policy == null)
                 throw new ArgumentNullException(nameof(policy));

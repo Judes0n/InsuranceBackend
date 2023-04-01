@@ -27,7 +27,7 @@ namespace InsuranceBackend.Controllers
         public IActionResult ChangeStatus(User user)
         {
             _adminService.ChangeUserStatus(user);
-            return Ok("Status Changed");
+            return Ok(user);
         }
 
         [HttpPost]

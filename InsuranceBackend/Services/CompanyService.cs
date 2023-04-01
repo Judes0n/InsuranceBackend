@@ -67,9 +67,10 @@ namespace InsuranceBackend.Services
         public void AddPolicy(Policy policy)
         {
             ValidatePolicy(policy);
+            policy.PolicyId = 0;
             policy.Status = StatusEnum.Inactive;
             _context.Policies.Add(policy);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         //Status
