@@ -82,7 +82,8 @@ namespace InsuranceBackend.Controllers
 
         public IActionResult GetTerms(int policyId)
         {
-            return Ok(_dbContext.PolicyTerms.Where(pt=>pt.PolicyId==policyId).ToList());
+            var res = _dbContext.PolicyTerms.Where(pt => pt.PolicyId == policyId).ToList();
+            return Ok(res);
         }
 
         [HttpPut]
