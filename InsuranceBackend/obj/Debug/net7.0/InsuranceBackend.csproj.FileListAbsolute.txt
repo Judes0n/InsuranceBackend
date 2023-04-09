@@ -74,5 +74,3 @@ E:\Core\InsuranceBackend\InsuranceBackend\InsuranceBackend\obj\Debug\net7.0\refi
 E:\Core\InsuranceBackend\InsuranceBackend\InsuranceBackend\obj\Debug\net7.0\InsuranceBackend.pdb
 E:\Core\InsuranceBackend\InsuranceBackend\InsuranceBackend\obj\Debug\net7.0\InsuranceBackend.genruntimeconfig.cache
 E:\Core\InsuranceBackend\InsuranceBackend\InsuranceBackend\obj\Debug\net7.0\ref\InsuranceBackend.dll
-E:\Core\InsuranceBackend\InsuranceBackend\InsuranceBackend\bin\Debug\net7.0\Microsoft.Configuration.ConfigurationBuilders.Base.dll
-E:\Core\InsuranceBackend\InsuranceBackend\InsuranceBackend\bin\Debug\net7.0\Microsoft.Configuration.ConfigurationBuilders.Environment.dll

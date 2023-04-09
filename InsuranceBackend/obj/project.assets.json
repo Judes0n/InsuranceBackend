@@ -89,35 +89,6 @@
           }
         }
       },
-      "Microsoft.Configuration.ConfigurationBuilders.Base/2.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/Net471/Microsoft.Configuration.ConfigurationBuilders.Base.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/Net471/Microsoft.Configuration.ConfigurationBuilders.Base.dll": {
-            "related": ".xml"
-          }
-        }
-      },
-      "Microsoft.Configuration.ConfigurationBuilders.Environment/2.0.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Configuration.ConfigurationBuilders.Base": "2.0.0"
-        },
-        "compile": {
-          "lib/Net471/Microsoft.Configuration.ConfigurationBuilders.Environment.dll": {
-            "related": ".xml"
-          }
-        },
-        "runtime": {
-          "lib/Net471/Microsoft.Configuration.ConfigurationBuilders.Environment.dll": {
-            "related": ".xml"
-          }
-        }
-      },
       "Microsoft.CSharp/4.5.0": {
         "type": "package",
         "compile": {
@@ -1365,45 +1336,6 @@
         "ref/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll",
         "useSharedDesignerContext.txt",
         "version.txt"
-      ]
-    },
-    "Microsoft.Configuration.ConfigurationBuilders.Base/2.0.0": {
-      "sha512": "elJJustKSvMNXD08UiYwtYBIvegSXE7IVV6XScbe4EBaQ4dtijhKauUSNloKUZ6FcEALQhH9Wf3L6sDvEGdJ/A==",
-      "type": "package",
-      "path": "microsoft.configuration.configurationbuilders.base/2.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "content/Net471/app.config.install.xdt",
-        "content/Net471/app.config.uninstall.xdt",
-        "content/Net471/web.config.install.xdt",
-        "content/Net471/web.config.uninstall.xdt",
-        "lib/Net471/Microsoft.Configuration.ConfigurationBuilders.Base.dll",
-        "lib/Net471/Microsoft.Configuration.ConfigurationBuilders.Base.xml",
-        "microsoft.configuration.configurationbuilders.base.2.0.0.nupkg.sha512",
-        "microsoft.configuration.configurationbuilders.base.nuspec"
-      ]
-    },
-    "Microsoft.Configuration.ConfigurationBuilders.Environment/2.0.0": {
-      "sha512": "lh/zujsJqRYl2+uiP09omUXK3ghBLYFaI1E+ddnsz302oYA5Qtm48rSCqIjfm4UfenGwaqTkuyxCF5XB1WgF0w==",
-      "type": "package",
-      "path": "microsoft.configuration.configurationbuilders.environment/2.0.0",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "README.txt",
-        "content/Net471/app.config.install.xdt",
-        "content/Net471/app.config.uninstall.xdt",
-        "content/Net471/web.config.install.xdt",
-        "content/Net471/web.config.uninstall.xdt",
-        "lib/Net471/Microsoft.Configuration.ConfigurationBuilders.Environment.dll",
-        "lib/Net471/Microsoft.Configuration.ConfigurationBuilders.Environment.xml",
-        "microsoft.configuration.configurationbuilders.environment.2.0.0.nupkg.sha512",
-        "microsoft.configuration.configurationbuilders.environment.nuspec",
-        "tools/Net471/Install.ps1",
-        "tools/Net471/KeyValueConfigBuildersCommon.ps1",
-        "tools/Net471/Uninstall.ps1"
       ]
     },
     "Microsoft.CSharp/4.5.0": {
@@ -3981,7 +3913,6 @@
   "projectFileDependencyGroups": {
     "net7.0": [
       "Microsoft.AspNetCore.OpenApi >= 7.0.4",
-      "Microsoft.Configuration.ConfigurationBuilders.Environment >= 2.0.0",
       "Microsoft.EntityFrameworkCore >= 7.0.4",
       "Microsoft.EntityFrameworkCore.Design >= 7.0.4",
       "Microsoft.EntityFrameworkCore.SqlServer >= 7.0.4",
@@ -4032,10 +3963,6 @@
             "target": "Package",
             "version": "[7.0.4, )"
           },
-          "Microsoft.Configuration.ConfigurationBuilders.Environment": {
-            "target": "Package",
-            "version": "[2.0.0, )"
-          },
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
             "version": "[7.0.4, )"
@@ -4083,27 +4010,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.200\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.Configuration.ConfigurationBuilders.Base 2.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Microsoft.Configuration.ConfigurationBuilders.Base",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.Configuration.ConfigurationBuilders.Environment 2.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Microsoft.Configuration.ConfigurationBuilders.Environment",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  }
 }

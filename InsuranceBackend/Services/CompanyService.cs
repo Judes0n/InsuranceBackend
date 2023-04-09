@@ -34,6 +34,10 @@ namespace InsuranceBackend.Services
         public Company GetCompany(int userID)
         {
             var res = _context.Companies.FirstOrDefault(c=>c.UserId == userID);
+            if(res == null)
+            {
+                return res = new Company();
+            }
             return res;
         }
 
@@ -71,6 +75,19 @@ namespace InsuranceBackend.Services
             policy.Status = StatusEnum.Inactive;
             _context.Policies.Add(policy);
             _context.SaveChanges();
+        }
+
+        public void AddPolicyTerm(PolicyTerm policyTerm)
+        {
+            _context.PolicyTerms.Add(policyTerm);
+            _context.SaveChanges();
+        }
+
+        public Policy GetPolicy(int policyId)
+        {
+            Policy? policy = _context.Policies.FirstOrDefault(p => p.PolicyId == policyId);
+            return policy ?? throw new NullReferenceException();
+
         }
 
         //Status

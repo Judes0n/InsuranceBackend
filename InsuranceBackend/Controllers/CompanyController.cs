@@ -3,6 +3,7 @@ using InsuranceBackend.Models;
 using InsuranceBackend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json.Serialization;
 
 namespace InsuranceBackend.Controllers
 {
@@ -18,6 +19,16 @@ namespace InsuranceBackend.Controllers
             _companyService = new CompanyService();
             _userService = new UserService();
         }
+
+        [HttpGet]
+        [Route("GetPolicy")]
+
+        public IActionResult GetPolicy(int policyId)
+        {
+           Policy policy = _companyService.GetPolicy(policyId);
+            return Ok(policy);
+        }
+
         [HttpPost]
         [Route("AddPolicy")]
 
@@ -27,6 +38,16 @@ namespace InsuranceBackend.Controllers
                 throw new ArgumentNullException(nameof(policy));
              _companyService.AddPolicy(policy);
              return Ok(policy);
+        }
+
+        [HttpPost]
+        [Route("AddPolicyTerm")]
+        public IActionResult AddPolicyTerm(PolicyTerm policyterm)
+        {
+            if (policyterm == null)
+                throw new ArgumentNullException(nameof(policyterm));
+            _companyService.AddPolicyTerm(policyterm);
+            return Ok(policyterm);
         }
 
         [HttpGet]

@@ -21,6 +21,5 @@
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgMicrosoft_Extensions_ApiDescription_Server Condition=" '$(PkgMicrosoft_Extensions_ApiDescription_Server)' == '' ">C:\Users\JN\.nuget\packages\microsoft.extensions.apidescription.server\6.0.5</PkgMicrosoft_Extensions_ApiDescription_Server>
     <PkgMicrosoft_EntityFrameworkCore_Tools Condition=" '$(PkgMicrosoft_EntityFrameworkCore_Tools)' == '' ">C:\Users\JN\.nuget\packages\microsoft.entityframeworkcore.tools\7.0.4</PkgMicrosoft_EntityFrameworkCore_Tools>
-    <PkgMicrosoft_Configuration_ConfigurationBuilders_Environment Condition=" '$(PkgMicrosoft_Configuration_ConfigurationBuilders_Environment)' == '' ">C:\Users\JN\.nuget\packages\microsoft.configuration.configurationbuilders.environment\2.0.0</PkgMicrosoft_Configuration_ConfigurationBuilders_Environment>
   </PropertyGroup>
 </Project>

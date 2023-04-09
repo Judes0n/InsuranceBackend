@@ -36,7 +36,7 @@ namespace Insurance.Controllers
         //Register
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register()
+        public IActionResult Register()
         {
             User user = new()
             {
@@ -46,7 +46,7 @@ namespace Insurance.Controllers
                 Type     = (UserTypeEnum)Enum.Parse(typeof(UserTypeEnum), Request.Form["Type"].ToString()),
                 Status   = StatusEnum.Inactive,
             };
-            var logUser = _userService.GetUserByName(user.UserName);
+            var logUser = _userService.GetUserByName(userName: user.UserName);
             if (logUser == null)
             {
                 var file = Request.Form.Files[0];
@@ -170,7 +170,7 @@ namespace Insurance.Controllers
         [HttpPost]
         [Route("Login")]
 
-        public async Task<IActionResult> Login([FromBody] User user)
+        public IActionResult Login([FromBody] User user)
         {
             var logUser = _userService.GetUserByName(user.UserName);
             if (logUser != null)

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "cMhnF0emnTPQrVXlocERNCr3aEyeoaJZo4bTcoJKNrlpUvfWTd8fFJMbX8ERNiKeUhopfMoDWJc2XTDLb84wag==",
+  "dgSpecHash": "xOTUAY2bHmc0dggll0wLY1MAzOimlXVaZzVKR7WtmXfyeHxVbuzxf3ZSf4Tv3FvtD3Lqq39409bQ1xB7EMh1iQ==",
   "success": true,
   "projectFilePath": "E:\\Core\\InsuranceBackend\\InsuranceBackend\\InsuranceBackend\\InsuranceBackend.csproj",
   "expectedPackageFiles": [
@@ -9,8 +9,6 @@
     "C:\\Users\\JN\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\JN\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.4\\microsoft.aspnetcore.openapi.7.0.4.nupkg.sha512",
     "C:\\Users\\JN\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
-    "C:\\Users\\JN\\.nuget\\packages\\microsoft.configuration.configurationbuilders.base\\2.0.0\\microsoft.configuration.configurationbuilders.base.2.0.0.nupkg.sha512",
-    "C:\\Users\\JN\\.nuget\\packages\\microsoft.configuration.configurationbuilders.environment\\2.0.0\\microsoft.configuration.configurationbuilders.environment.2.0.0.nupkg.sha512",
     "C:\\Users\\JN\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\JN\\.nuget\\packages\\microsoft.data.sqlclient\\5.0.1\\microsoft.data.sqlclient.5.0.1.nupkg.sha512",
     "C:\\Users\\JN\\.nuget\\packages\\microsoft.data.sqlclient.sni.runtime\\5.0.1\\microsoft.data.sqlclient.sni.runtime.5.0.1.nupkg.sha512",
@@ -81,26 +79,5 @@
     "C:\\Users\\JN\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
     "C:\\Users\\JN\\.nuget\\packages\\system.windows.extensions\\5.0.0\\system.windows.extensions.5.0.0.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.Configuration.ConfigurationBuilders.Base 2.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Microsoft.Configuration.ConfigurationBuilders.Base",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    },
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Package 'Microsoft.Configuration.ConfigurationBuilders.Environment 2.0.0' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
-      "libraryId": "Microsoft.Configuration.ConfigurationBuilders.Environment",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  "logs": []
 }

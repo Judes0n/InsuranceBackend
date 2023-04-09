@@ -92,7 +92,7 @@ namespace InsuranceBackend.Controllers
         public IActionResult UpdatePolicy(Policy policy)
         {
             _adminService.ChangePolicyStatus(policy);
-            return Ok("Status Updated");
+            return Ok(policy);
         }
 
         [HttpGet]
