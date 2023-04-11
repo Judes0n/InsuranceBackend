@@ -3926,11 +3926,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Core\\InsuranceBackend\\InsuranceBackend\\InsuranceBackend\\InsuranceBackend.csproj",
+      "projectUniqueName": "E:\\ASP Projects\\Core\\InsuranceBackend\\InsuranceBackend\\InsuranceBackend.csproj",
       "projectName": "InsuranceBackend",
-      "projectPath": "E:\\Core\\InsuranceBackend\\InsuranceBackend\\InsuranceBackend\\InsuranceBackend.csproj",
+      "projectPath": "E:\\ASP Projects\\Core\\InsuranceBackend\\InsuranceBackend\\InsuranceBackend.csproj",
       "packagesPath": "C:\\Users\\JN\\.nuget\\packages\\",
-      "outputPath": "E:\\Core\\InsuranceBackend\\InsuranceBackend\\InsuranceBackend\\obj\\",
+      "outputPath": "E:\\ASP Projects\\Core\\InsuranceBackend\\InsuranceBackend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\JN\\AppData\\Roaming\\NuGet\\NuGet.Config",
