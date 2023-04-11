@@ -116,9 +116,9 @@ namespace InsuranceBackend.Services
         }
         
         //Views
-        public IEnumerable<AgentCompany> ViewAgents(int companyID)
+        public IEnumerable<AgentCompany> ViewAgents(int companyId)
         {
-            return _context.AgentCompanies.Include(a=>a.CompanyId==companyID).ToList();
+            return _context.AgentCompanies.Where(a=>a.CompanyId == companyId).ToList();
         }
         
       

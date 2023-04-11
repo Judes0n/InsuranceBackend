@@ -157,14 +157,14 @@ namespace Insurance.Controllers
                     _userService.DeleteUser(user);
                     return BadRequest(ex.Message);
                 }
-                return BadRequest("User Registration Failed!!");
+                return BadRequest();
 
             }
             else if (logUser.UserName == user.UserName)
             {
-                return BadRequest("UserName is Unavailable!!");
+                return BadRequest();
             }
-            return BadRequest("Registration Failed");
+            return BadRequest();
         }
 
         [HttpPost]
@@ -180,9 +180,9 @@ namespace Insurance.Controllers
                     return Ok(logUser);
                 }
                 else 
-                    return BadRequest("Invalid Credentials");
+                    return BadRequest();
             }
-            return BadRequest("User Doesn't Exist!");
+            return BadRequest();
             
         }
 

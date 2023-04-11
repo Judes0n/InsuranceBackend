@@ -61,9 +61,9 @@ namespace InsuranceBackend.Controllers
         [HttpGet]
         [Route("ViewAgents")]
 
-        public IEnumerable<AgentCompany> ViewAgents(int companyID)
+        public IEnumerable<AgentCompany> ViewAgents(int companyId)
         {
-            return _companyService.ViewAgents(companyID);
+            return _companyService.ViewAgents(companyId);
         }
 
         [HttpGet]
@@ -72,6 +72,15 @@ namespace InsuranceBackend.Controllers
         public Company GetCompany(int userID) 
         { 
             return _companyService.GetCompany(userID);
+        }
+
+
+        [HttpGet]
+        [Route("GetAllCompany")]
+
+        public IEnumerable<Company> GetAll()
+        {
+            return _companyService.GetAllCompanies();
         }
     } 
 }

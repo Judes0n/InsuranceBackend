@@ -1,9 +1,7 @@
 ﻿using InsuranceBackend.Models;
 using InsuranceBackend.Services;
-using InsuranceBackend.Enum;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace Insurance.Controllers
 {
@@ -56,6 +54,42 @@ namespace Insurance.Controllers
         { 
             var res = _dbContext.Policies.FirstOrDefault(p=>p.PolicyId == policyId);
             return Ok(res);
+        }
+
+        [HttpGet]
+        [Route("GetAgentById")]
+
+        public IActionResult GetAgentById(int agentId)
+        {
+           var res = _agentServices.GetAgent(agentId);
+            return Ok(res);
+        }
+
+        [HttpPost]
+        [Route("ApplyCompany")]
+
+        public IActionResult Apply()
+        {
+            AgentCompany agentCompany = new();
+            agentCompany.CompanyId = int.Parse(Request.Form["companyId"]);
+            agentCompany.AgentId = int.Parse(Request.Form["agentId"]);
+            var logagentCompany = _dbContext.AgentCompanies.FirstOrDefault(a => a.AgentId == agentCompany.AgentId);
+            if (logagentCompany != null)
+            {
+                if (logagentCompany.CompanyId == agentCompany.CompanyId)
+                {
+                    return BadRequest();
+
+                }
+
+            }
+            else
+            {
+                agentCompany.Status = InsuranceBackend.Enum.StatusEnum.Inactive;
+                _dbContext.AgentCompanies.Add(agentCompany);
+            }
+            _dbContext.SaveChanges();
+            return Ok();
         }
     }
 }
