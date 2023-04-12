@@ -1,7 +1,8 @@
-﻿using InsuranceBackend.Models;
+﻿using InsuranceBackend.Enum;
+using InsuranceBackend.Models;
 using InsuranceBackend.Services;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace Insurance.Controllers
 {
@@ -57,12 +58,17 @@ namespace Insurance.Controllers
         }
 
         [HttpGet]
-        [Route("GetAgentById")]
+        [Route("GetAgentsById")]
 
-        public IActionResult GetAgentById(int agentId)
+        public IEnumerable<Agent> GetAgentsByCompany(int companyId)
         {
-           var res = _agentServices.GetAgent(agentId);
-            return Ok(res);
+         var agents = _dbContext.AgentCompanies.Where(ac=>ac.CompanyId == companyId).Select(a=>a.AgentId).ToList();
+         List<Agent> result = new List<Agent>();
+         foreach (var agentid in agents)
+            {
+             result.Add(_dbContext.Agents.FirstOrDefault(a => a.AgentId == agentid));
+            }
+            return result;
         }
 
         [HttpPost]
@@ -85,7 +91,7 @@ namespace Insurance.Controllers
             }
             else
             {
-                agentCompany.Status = InsuranceBackend.Enum.StatusEnum.Inactive;
+                agentCompany.Status = StatusEnum.Inactive;
                 _dbContext.AgentCompanies.Add(agentCompany);
             }
             _dbContext.SaveChanges();

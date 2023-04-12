@@ -10,7 +10,7 @@ public partial class Company
 
     public int? UserId { get; set; }
 
-    public string CompanyName { get; set; }
+    public string? CompanyName { get; set; }
 
     public string? Address { get; set; }
 
@@ -22,7 +22,7 @@ public partial class Company
 
     public ActorStatusEnum Status { get; set; }
 
-    public virtual ICollection<AgentCompany> AgentCompanies { get; } = new List<AgentCompany>();
+    public virtual ICollection<AgentCompany> AgentCompanies { get; set; } = new List<AgentCompany>();
 
     public virtual ICollection<Policy> Policies { get; } = new List<Policy>();
 

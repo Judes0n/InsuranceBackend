@@ -14,7 +14,7 @@ public partial class AgentCompany
 
     public StatusEnum Status { get; set; }
 
-    public virtual Agent Agent { get; set; } = null!;
+    public virtual Agent Agent { get; } = null!;
 
-    public virtual Company Company { get; set; } = null!;
+    public virtual Company Company { get; } = null!;
 }

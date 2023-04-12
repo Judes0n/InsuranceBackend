@@ -3,6 +3,7 @@ using InsuranceBackend.Models;
 using InsuranceBackend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 
 namespace InsuranceBackend.Controllers
@@ -11,13 +12,14 @@ namespace InsuranceBackend.Controllers
     [ApiController]
     public class CompanyController : ControllerBase
     {
-        CompanyService _companyService;
-        UserService _userService;
-
+       readonly CompanyService _companyService;
+       readonly UserService _userService;
+       readonly InsuranceDbContext _dbContext;
         public CompanyController()
         {
             _companyService = new CompanyService();
             _userService = new UserService();
+            _dbContext = new();
         }
 
         [HttpGet]
@@ -81,6 +83,28 @@ namespace InsuranceBackend.Controllers
         public IEnumerable<Company> GetAll()
         {
             return _companyService.GetAllCompanies();
+        }
+
+        [HttpPost]
+        [Route("ChangeAgentCompanyStatus")]
+
+        public IActionResult Change()
+        {
+            int id = int.Parse(Request.Form["id"]);
+            int status = int.Parse(Request.Form["status"]);
+            AgentCompany agentCompany = new();
+            agentCompany = _dbContext.AgentCompanies.FirstOrDefault(ac => ac.Id == id);
+            agentCompany.Status =(StatusEnum)status;
+            _dbContext.AgentCompanies.Update(agentCompany);
+            _dbContext.SaveChanges();
+            return Ok(agentCompany);
+        }
+
+        [HttpGet]
+        [Route("GetAgentCompany")]
+        public IActionResult GetAgentCompany(int id) 
+        { 
+            return Ok(_dbContext.AgentCompanies.FirstOrDefault(ac=>ac.Id == id));
         }
     } 
 }

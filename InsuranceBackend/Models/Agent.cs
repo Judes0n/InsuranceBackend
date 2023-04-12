@@ -28,7 +28,7 @@ public partial class Agent
 
     public ActorStatusEnum Status { get; set; }
 
-    public virtual ICollection<AgentCompany> AgentCompanies { get; } = new List<AgentCompany>();
+    public virtual ICollection<AgentCompany> AgentCompanies { get; set; } = new List<AgentCompany>();
 
     public virtual ICollection<ClientPolicy> ClientPolicies { get; } = new List<ClientPolicy>();
 
