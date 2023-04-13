@@ -31,6 +31,15 @@ namespace Insurance.Controllers
         }
 
         [HttpGet]
+        [Route("GetPolicies")]
+
+        public IEnumerable<Policy> Getpolicies(int companyId)
+        {
+            var res = _dbContext.Policies.Include(a=>a.CompanyId == companyId).ToList();
+            return res;
+        }
+
+        [HttpGet]
         [Route("GetClientPolicies")]
 
         public IActionResult GetClientPolicies(int agentId)
@@ -62,14 +71,29 @@ namespace Insurance.Controllers
 
         public IEnumerable<Agent> GetAgentsByCompany(int companyId)
         {
-         var agents = _dbContext.AgentCompanies.Where(ac=>ac.CompanyId == companyId).Select(a=>a.AgentId).ToList();
-         List<Agent> result = new List<Agent>();
-         foreach (var agentid in agents)
+            var agents = _dbContext.AgentCompanies.Where(ac=>ac.CompanyId == companyId).Select(a=>a.AgentId).ToList();
+            List<Agent> result = new List<Agent>();
+            foreach (var agentid in agents)
             {
-             result.Add(_dbContext.Agents.FirstOrDefault(a => a.AgentId == agentid));
+                result.Add(_dbContext.Agents.FirstOrDefault(a => a.AgentId == agentid));
             }
             return result;
         }
+
+        [HttpGet]
+        [Route("GetCompanies")]
+
+        public IEnumerable<Company> GetCompaniesby(int agentId) 
+        { 
+            var companies = _dbContext.AgentCompanies.Where(ac=>ac.AgentId == agentId).Select(a=>a.CompanyId).ToList();
+            List<Company> result = new();
+            foreach(var companyid in companies)
+            {
+                result.Add(_dbContext.Companies.FirstOrDefault(c => c.CompanyId == companyid));
+            }
+            return result;  
+        }
+
 
         [HttpPost]
         [Route("ApplyCompany")]
