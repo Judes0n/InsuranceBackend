@@ -42,10 +42,10 @@ namespace Insurance.Controllers
         [HttpGet]
         [Route("GetClientPolicies")]
 
-        public IActionResult GetClientPolicies(int agentId)
+        public IEnumerable<ClientPolicy> GetClientPolicies(int agentId)
         {
-            var res = _dbContext.ClientPolicies.Where(cp=>cp.AgentId == agentId).ToList();
-            return Ok(res);
+            List <ClientPolicy> res = _dbContext.ClientPolicies.Include(cp=>cp.AgentId == agentId).ToList();
+            return res;
         }
 
         [HttpGet]
@@ -94,6 +94,19 @@ namespace Insurance.Controllers
             return result;  
         }
 
+        [HttpGet]
+        [Route("GetClients")]
+
+        public IEnumerable<Client> GetClients(int agentId)
+        {
+            var clients = _dbContext.ClientPolicies.Where(cp=>cp.AgentId==agentId).Select(cp=>cp.ClientId).ToList();
+            List<Client> result = new();
+            foreach(var clientid in clients)
+            {
+                result.Add(_dbContext.Clients.FirstOrDefault(c=>c.ClientId == clientid));
+            }
+            return result;
+        }
 
         [HttpPost]
         [Route("ApplyCompany")]
@@ -120,6 +133,23 @@ namespace Insurance.Controllers
             }
             _dbContext.SaveChanges();
             return Ok();
+        }
+
+        [HttpPut]
+        [Route("ChangeCpolicyStatus")]
+
+        public IActionResult ChangeStatus() 
+        { 
+            int status = int.Parse(Request.Form["status"]);
+            int clientpolicyId = int.Parse(Request.Form["clientpolicyId"]);
+            ClientPolicy dbcp = _dbContext.ClientPolicies.FirstOrDefault(cp => cp.ClientPolicyId == clientpolicyId);
+            if(dbcp != null) 
+            { 
+                dbcp.Status = status;
+                _dbContext.ClientPolicies.Update(dbcp);
+            }
+            _dbContext.SaveChanges();
+            return Ok(dbcp);
         }
     }
 }
