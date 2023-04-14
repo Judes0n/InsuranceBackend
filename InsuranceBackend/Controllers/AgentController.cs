@@ -145,11 +145,38 @@ namespace Insurance.Controllers
             ClientPolicy dbcp = _dbContext.ClientPolicies.FirstOrDefault(cp => cp.ClientPolicyId == clientpolicyId);
             if(dbcp != null) 
             { 
-                dbcp.Status = status;
+                dbcp.Status = (ClientPolicyStatusEnum)status;
                 _dbContext.ClientPolicies.Update(dbcp);
             }
             _dbContext.SaveChanges();
             return Ok(dbcp);
+        }
+
+        [HttpPost]
+        [Route("AddClientDeath")]
+
+        public IActionResult AddClientDeath(ClientDeath clientDeath) 
+        { 
+           _agentServices.AddClientDeath(clientDeath);
+            return Ok(clientDeath);
+        }
+
+        [HttpPost]
+        [Route("AddMaturity")]
+
+        public IActionResult AddMaturity(Maturity maturity)
+        {
+            _agentServices.AddMaturity(maturity);
+            return Ok(maturity);
+        }
+
+        [HttpPost]
+        [Route("AddPenalty")]
+
+        public IActionResult AddPenalty(Premium premium)
+        {
+            _agentServices.AddPenalty(premium);
+            return Ok(premium);
         }
     }
 }

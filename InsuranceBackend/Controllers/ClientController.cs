@@ -1,4 +1,5 @@
-﻿using InsuranceBackend.Services;
+﻿using InsuranceBackend.Models;
+using InsuranceBackend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +27,22 @@ namespace InsuranceBackend.Controllers
             return Ok(dbclient);
         }
 
+        [HttpGet]
+        [Route("GetClientById")]
 
+        public IActionResult GetClient(int userId)
+        {
+            var dbclient = _clientService.GetClientById(userId);
+            return Ok(dbclient);
+        }
+
+        [HttpPost]
+        [Route("AddNominee")]
+
+        public IActionResult AddNominee(Nominee nominee)
+        {
+            _clientService.AddNominee(nominee);
+            return Ok(nominee);
+        }
     }
 }

@@ -82,11 +82,67 @@ namespace InsuranceBackend.Services
             {
                 throw new NullReferenceException(null);
             }
-            dbclientpolicy.Status =(int) e;
+            dbclientpolicy.Status =(ClientPolicyStatusEnum) e;
             _context.ClientPolicies.Update(dbclientpolicy);
             _context.SaveChanges();
         }
 
+        public void AddClientDeath(ClientDeath clientDeath)
+        {
+            var dbcd = _context.ClientDeaths.Find(clientDeath);
+            if (dbcd != null)
+            {
+                throw new DbUpdateConcurrencyException();
+            }   
+            ValidateClientPolicy(clientDeath.ClientPolicyId);
+            _context.ClientDeaths.Add(clientDeath);
+            ClientPolicy? clientPolicy = _context.ClientPolicies.FirstOrDefault(p => p.ClientPolicyId == clientDeath.ClientPolicyId);
+            if(clientPolicy != null)
+            {
+                clientPolicy.Status = ClientPolicyStatusEnum.Mature;
+                _context.ClientPolicies.Update(clientPolicy);
+            }
+            _context.SaveChanges();
+            
+        }
+
+        public void AddMaturity(Maturity maturity) 
+        { 
+            var dbm = _context.Maturities.Find(maturity);
+            if(dbm != null)
+            {
+                throw new DbUpdateConcurrencyException();
+            }
+            ValidateClientPolicy(maturity.ClientPolicyId);
+            _context.Maturities.Add(maturity);
+            ClientPolicy? clientPolicy = _context.ClientPolicies.FirstOrDefault(p=>p.ClientPolicyId == maturity.ClientPolicyId);
+            if(clientPolicy != null)
+            {
+                clientPolicy.Status = ClientPolicyStatusEnum.Mature;
+                _context.ClientPolicies.Update(clientPolicy);
+            }
+            _context.SaveChanges();
+            
+        }
+
+        public void AddPenalty(Premium premium)
+        {
+            var dbp = _context.Premia.Find(premium);
+            if (dbp != null)
+            {
+                throw new DbUpdateConcurrencyException();
+            }
+            ValidateClientPolicy(premium.ClientPolicyId);
+            _context.Premia.Add(premium);
+            ClientPolicy? clientPolicy = _context.ClientPolicies.FirstOrDefault(p => p.ClientPolicyId == premium.ClientPolicyId);
+            if (clientPolicy != null)
+            {
+                clientPolicy.Counter += 2;
+                _context.ClientPolicies.Update(clientPolicy);
+            }
+            _context.SaveChanges();
+
+        }
         public IEnumerable<Policy> ViewPolicies(int agentID)
         {
             ValidateAgent(agentID);
@@ -117,9 +173,11 @@ namespace InsuranceBackend.Services
             return _context.Agents.FirstOrDefault(a => a.AgentId == agentID) != null;
         }
 
-        private bool ValidateClient(int? clientId)
+        private bool ValidateClientPolicy(int? clientPolicyId)
         {
-            throw new NotImplementedException();
+            return _context.ClientPolicies.FirstOrDefault(cp=>cp.ClientPolicyId == clientPolicyId) != null;
         }
+
+
     }
 }

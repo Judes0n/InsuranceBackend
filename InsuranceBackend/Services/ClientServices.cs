@@ -21,6 +21,10 @@ namespace InsuranceBackend.Services
             return res ?? throw new Exception();
         }
 
+        public Client GetClientById(int userId)
+        {
+            return _context.Clients.FirstOrDefault(c=>c.UserId == userId) ?? throw new Exception();
+        }
         public Client GetClientByName(string userName)
         {
             return _context.Clients.FirstOrDefault(c=>c.ClientName==userName)?? throw new DataMisalignedException(nameof(userName));

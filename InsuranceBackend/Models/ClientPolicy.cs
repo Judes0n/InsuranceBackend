@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsuranceBackend.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -17,7 +18,7 @@ public partial class ClientPolicy
 
     public int? Counter { get; set; }
 
-    public int? Status { get; set; }
+    public ClientPolicyStatusEnum Status { get; set; }
 
     public int AgentId { get; set; }
 
