@@ -176,7 +176,7 @@ namespace InsuranceBackend.Services
                         NomineeName = row.Field<string>("NomineeName"),
                         Relation = row.Field<string>("Relation"),
                         Address = row.Field<string>("Address"),
-                        PhoneNum = row.Field <decimal> ("PhoneNum")
+                        PhoneNum = row.Field <string> ("PhoneNum")
                     }).ToList();
                 return nominees;
             }

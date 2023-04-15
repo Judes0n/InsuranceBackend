@@ -122,13 +122,12 @@ namespace Insurance.Controllers
                 if (logagentCompany.CompanyId == agentCompany.CompanyId)
                 {
                     return BadRequest();
-
                 }
-
             }
             else
             {
                 agentCompany.Status = StatusEnum.Inactive;
+                agentCompany.Referral = "REFERRAL";
                 _dbContext.AgentCompanies.Add(agentCompany);
             }
             _dbContext.SaveChanges();

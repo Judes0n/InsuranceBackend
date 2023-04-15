@@ -151,7 +151,7 @@ namespace InsuranceBackend.Services
             List<Policy> policies = new();
             foreach (var compID in companiesIDs)
             {
-                policies.Add((Policy)_context.Policies.Include(c => c.CompanyId == compID).ToList());
+                policies.Add((Policy)_context.Policies.Include(c => c.CompanyId == compID));
             }
             return policies;
         }

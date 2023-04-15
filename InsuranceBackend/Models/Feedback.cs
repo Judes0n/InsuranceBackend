@@ -7,5 +7,5 @@ public partial class Feedback
 {
     public int Fid { get; set; }
 
-    public string? Feed { get; set; }
+    public string Feed { get; set; } = null!;
 }

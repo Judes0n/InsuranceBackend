@@ -95,9 +95,29 @@ namespace InsuranceBackend.Controllers
             AgentCompany agentCompany = new();
             agentCompany = _dbContext.AgentCompanies.FirstOrDefault(ac => ac.Id == id);
             agentCompany.Status =(StatusEnum)status;
-            _dbContext.AgentCompanies.Update(agentCompany);
-            _dbContext.SaveChanges();
-            return Ok(agentCompany);
+            if (status != 1)
+            {
+                _dbContext.AgentCompanies.Update(agentCompany);
+                _dbContext.SaveChanges();
+                return Ok(agentCompany);
+            }
+            else
+            {
+                var dbcompany = _dbContext.Companies.FirstOrDefault(c => c.CompanyId == agentCompany.CompanyId);
+                var dbagent = _dbContext.Agents.FirstOrDefault(a => a.AgentId == agentCompany.AgentId);
+                Random random = new();
+            Retry:
+                agentCompany.Referral = dbcompany.CompanyName + dbagent.AgentName + random.Next(1, 1000);
+                var dbac = _dbContext.AgentCompanies.FirstOrDefault(ac => ac.Referral == agentCompany.Referral);
+                if (dbac == null)
+                {
+                    _dbContext.AgentCompanies.Update(agentCompany);
+                }
+                else
+                    goto Retry;
+                _dbContext.SaveChanges();
+                return Ok(agentCompany);
+            }
         }
 
         [HttpGet]

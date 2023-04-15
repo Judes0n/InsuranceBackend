@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsuranceBackend.Enum;
+using System;
 using System.Collections.Generic;
 
 namespace InsuranceBackend.Models;
@@ -11,11 +12,11 @@ public partial class Payment
 
     public int TransactionId { get; set; }
 
-    public string? Time { get; set; }
+    public string Time { get; set; } = null!;
 
-    public decimal? Amount { get; set; }
+    public decimal Amount { get; set; }
 
-    public int? Status { get; set; }
+    public PaymentStatusEnum Status { get; set; }
 
     public virtual ClientPolicy ClientPolicy { get; set; } = null!;
 }

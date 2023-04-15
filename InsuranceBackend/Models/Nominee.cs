@@ -9,13 +9,15 @@ public partial class Nominee
 
     public int ClientId { get; set; }
 
-    public string? NomineeName { get; set; }
+    public string NomineeName { get; set; } = null!;
 
-    public string? Relation { get; set; }
+    public string Relation { get; set; } = null!;
 
-    public string? Address { get; set; }
+    public string Address { get; set; } = null!;
 
-    public decimal PhoneNum { get; set; }
+    public string PhoneNum { get; set; } = null!;
 
-    public virtual Client? Client { get; set; }
+    public virtual Client Client { get; set; } = null!;
+
+    public virtual ICollection<ClientPolicy> ClientPolicies { get; } = new List<ClientPolicy>();
 }

@@ -12,9 +12,11 @@ public partial class AgentCompany
 
     public int CompanyId { get; set; }
 
+    public string Referral { get; set; } = null!;
+
     public StatusEnum Status { get; set; }
 
-    public virtual Agent Agent { get; } = null!;
+    public virtual Agent Agent { get; set; } = null!;
 
-    public virtual Company Company { get; } = null!;
+    public virtual Company Company { get; set; } = null!;
 }

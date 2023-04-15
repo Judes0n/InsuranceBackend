@@ -7,7 +7,7 @@ public partial class PolicyType
 {
     public int PolicytypeId { get; set; }
 
-    public string? PolicytypeName { get; set; }
+    public string PolicytypeName { get; set; } = null!;
 
     public virtual ICollection<Policy> Policies { get; } = new List<Policy>();
 }

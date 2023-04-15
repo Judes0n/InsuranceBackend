@@ -46,7 +46,7 @@ public partial class InsuranceDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -75,7 +75,8 @@ public partial class InsuranceDbContext : DbContext
                 .HasColumnName("gender");
             entity.Property(e => e.Grade).HasColumnName("grade");
             entity.Property(e => e.PhoneNum)
-                .HasColumnType("numeric(13, 0)")
+                .HasMaxLength(15)
+                .IsUnicode(false)
                 .HasColumnName("phoneNum");
             entity.Property(e => e.ProfilePic)
                 .HasMaxLength(50)
@@ -86,18 +87,23 @@ public partial class InsuranceDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Agents)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Agents_Users");
         });
 
         modelBuilder.Entity<AgentCompany>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AgentCom__3213E83FE027F7A3");
+            entity.HasKey(e => e.Id).HasName("PK__AgentCom__3213E83F18A5D027");
 
             entity.ToTable("AgentCompany");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AgentId).HasColumnName("agentID");
             entity.Property(e => e.CompanyId).HasColumnName("companyID");
+            entity.Property(e => e.Referral)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("referral");
             entity.Property(e => e.Status).HasColumnName("status");
 
             entity.HasOne(d => d.Agent).WithMany(p => p.AgentCompanies)
@@ -135,7 +141,8 @@ public partial class InsuranceDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("gender");
             entity.Property(e => e.PhoneNum)
-                .HasColumnType("numeric(13, 0)")
+                .HasMaxLength(15)
+                .IsUnicode(false)
                 .HasColumnName("phoneNum");
             entity.Property(e => e.ProfilePic)
                 .HasMaxLength(50)
@@ -146,6 +153,7 @@ public partial class InsuranceDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Clients)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Clients_Users");
         });
 
@@ -167,6 +175,7 @@ public partial class InsuranceDbContext : DbContext
 
             entity.HasOne(d => d.ClientPolicy).WithMany(p => p.ClientDeaths)
                 .HasForeignKey(d => d.ClientPolicyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ClientDeaths_ClientPolicy");
         });
 
@@ -182,6 +191,7 @@ public partial class InsuranceDbContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("expDate");
+            entity.Property(e => e.NomineeId).HasColumnName("nomineeID");
             entity.Property(e => e.PolicyTermId).HasColumnName("policyTermID");
             entity.Property(e => e.StartDate)
                 .HasMaxLength(20)
@@ -196,10 +206,17 @@ public partial class InsuranceDbContext : DbContext
 
             entity.HasOne(d => d.Client).WithMany(p => p.ClientPolicies)
                 .HasForeignKey(d => d.ClientId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ClientPolicy_Clients");
+
+            entity.HasOne(d => d.Nominee).WithMany(p => p.ClientPolicies)
+                .HasForeignKey(d => d.NomineeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ClientPolicy_Nominees");
 
             entity.HasOne(d => d.PolicyTerm).WithMany(p => p.ClientPolicies)
                 .HasForeignKey(d => d.PolicyTermId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ClientPolicy_PolicyTerms");
         });
 
@@ -219,7 +236,8 @@ public partial class InsuranceDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("email");
             entity.Property(e => e.PhoneNum)
-                .HasColumnType("numeric(13, 0)")
+                .HasMaxLength(15)
+                .IsUnicode(false)
                 .HasColumnName("phoneNum");
             entity.Property(e => e.ProfilePic)
                 .HasMaxLength(50)
@@ -230,6 +248,7 @@ public partial class InsuranceDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Companies)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Companies_Users");
         });
 
@@ -264,6 +283,7 @@ public partial class InsuranceDbContext : DbContext
 
             entity.HasOne(d => d.ClientPolicy).WithMany(p => p.Maturities)
                 .HasForeignKey(d => d.ClientPolicyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Maturity_ClientPolicy");
         });
 
@@ -280,7 +300,8 @@ public partial class InsuranceDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("nomineeName");
             entity.Property(e => e.PhoneNum)
-                .HasColumnType("numeric(13, 0)")
+                .HasMaxLength(15)
+                .IsUnicode(false)
                 .HasColumnName("phoneNum");
             entity.Property(e => e.Relation)
                 .HasMaxLength(20)
@@ -289,6 +310,7 @@ public partial class InsuranceDbContext : DbContext
 
             entity.HasOne(d => d.Client).WithMany(p => p.Nominees)
                 .HasForeignKey(d => d.ClientId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Nominees_Clients");
         });
 
@@ -329,10 +351,12 @@ public partial class InsuranceDbContext : DbContext
 
             entity.HasOne(d => d.Company).WithMany(p => p.Policies)
                 .HasForeignKey(d => d.CompanyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Policies_Companies");
 
             entity.HasOne(d => d.Policytype).WithMany(p => p.Policies)
                 .HasForeignKey(d => d.PolicytypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Policies_PolicyType");
         });
 
@@ -348,6 +372,7 @@ public partial class InsuranceDbContext : DbContext
 
             entity.HasOne(d => d.Policy).WithMany(p => p.PolicyTerms)
                 .HasForeignKey(d => d.PolicyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PolicyTerms_Policies");
         });
 
@@ -374,12 +399,13 @@ public partial class InsuranceDbContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("dateOfCollection");
-            entity.Property(e => e.Penality)
+            entity.Property(e => e.Penalty)
                 .HasColumnType("money")
-                .HasColumnName("penality");
+                .HasColumnName("penalty");
 
             entity.HasOne(d => d.ClientPolicy).WithMany(p => p.Premia)
                 .HasForeignKey(d => d.ClientPolicyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Premium_ClientPolicy");
         });
 

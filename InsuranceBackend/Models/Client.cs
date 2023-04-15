@@ -8,21 +8,21 @@ public partial class Client
 {
     public int ClientId { get; set; }
 
-    public int? UserId { get; set; }
+    public int UserId { get; set; }
 
-    public string ClientName { get; set; }
+    public string ClientName { get; set; } = null!;
 
-    public string? Gender { get; set; }
+    public string Gender { get; set; } = null!;
 
-    public string? Dob { get; set; }
+    public string Dob { get; set; } = null!;
 
-    public string? Address { get; set; }
+    public string Address { get; set; } = null!;
 
-    public string? ProfilePic { get; set; }
+    public string ProfilePic { get; set; } = null!;
 
-    public decimal? PhoneNum { get; set; }
+    public string PhoneNum { get; set; } = null!;
 
-    public string? Email { get; set; }
+    public string Email { get; set; } = null!;
 
     public ActorStatusEnum Status { get; set; }
 
@@ -30,5 +30,5 @@ public partial class Client
 
     public virtual ICollection<Nominee> Nominees { get; } = new List<Nominee>();
 
-    public virtual User? User { get; set; }
+    public virtual User User { get; set; } = null!;
 }

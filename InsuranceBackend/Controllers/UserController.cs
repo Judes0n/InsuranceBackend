@@ -102,7 +102,7 @@ namespace Insurance.Controllers
                                         client.Gender = gender;
                                         client.Dob = "Date of Birth";
                                         client.ProfilePic = dbPath;
-                                        client.PhoneNum = 911234567890;
+                                        client.PhoneNum = "0000000000";
                                         client.Email = email;
                                         client.Status =(int) ActorStatusEnum.Unapproved;
                                         //client.User = dbuser;
@@ -119,7 +119,7 @@ namespace Insurance.Controllers
                                         agent.UserId = dbagent.UserId;
                                         agent.AgentName = dbagent.UserName;
                                         agent.Gender = gender;
-                                        agent.PhoneNum = 0000000000;
+                                        agent.PhoneNum = "0000000000";
                                         agent.Dob = "Date of Birth";
                                         agent.Email = email;
                                         agent.Address = "Address";
@@ -141,9 +141,9 @@ namespace Insurance.Controllers
                                         company.CompanyName = dbcompany.UserName;
                                         company.Address = "Address";
                                         company.Email = email;
-                                        company.PhoneNum = 0;
+                                        company.PhoneNum = "0000000000";
                                         company.ProfilePic = dbPath;
-                                        company.Status =(int) ActorStatusEnum.Unapproved;
+                                        company.Status = ActorStatusEnum.Unapproved;
                                         _companyService.AddCompany(company);
                                     }
                                     break;
@@ -154,7 +154,6 @@ namespace Insurance.Controllers
                 }
                 catch (Exception ex)
                 {
-                    _userService.DeleteUser(user);
                     return BadRequest(ex.Message);
                 }
                 return BadRequest();
