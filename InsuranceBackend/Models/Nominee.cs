@@ -7,7 +7,7 @@ public partial class Nominee
 {
     public int NomineeId { get; set; }
 
-    public int? ClientId { get; set; }
+    public int ClientId { get; set; }
 
     public string? NomineeName { get; set; }
 
@@ -15,7 +15,7 @@ public partial class Nominee
 
     public string? Address { get; set; }
 
-    public decimal? PhoneNum { get; set; }
+    public decimal PhoneNum { get; set; }
 
     public virtual Client? Client { get; set; }
 }

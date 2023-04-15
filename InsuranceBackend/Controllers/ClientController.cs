@@ -44,5 +44,15 @@ namespace InsuranceBackend.Controllers
             _clientService.AddNominee(nominee);
             return Ok(nominee);
         }
+
+        [HttpGet]
+        [Route("ViewNominee")]
+
+        public IEnumerable<Nominee> GetNominees(int clientId)
+        {
+           var nominees = _clientService.ViewClientNominees(clientId);
+            return nominees;
+        }
+
     }
 }

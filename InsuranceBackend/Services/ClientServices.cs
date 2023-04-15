@@ -3,6 +3,7 @@ using InsuranceBackend.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Linq;
 
 namespace InsuranceBackend.Services
@@ -23,7 +24,8 @@ namespace InsuranceBackend.Services
 
         public Client GetClientById(int userId)
         {
-            return _context.Clients.FirstOrDefault(c=>c.UserId == userId) ?? throw new Exception();
+            Client client = _context.Clients.FirstOrDefault(c=>c.UserId == userId) ?? throw new Exception();
+            return client;
         }
         public Client GetClientByName(string userName)
         {
@@ -93,35 +95,35 @@ namespace InsuranceBackend.Services
         {
             ValidateClientPolicy(clientPolicy);
             _context.ClientPolicies.Add(clientPolicy);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public void AddClientDeath(ClientDeath clientDeath)
         {
             ValidateClientDeath(clientDeath);
             _context.ClientDeaths.Add(clientDeath);
-            _context.SaveChangesAsync();    
+            _context.SaveChanges();    
         }
 
         public void AddPolicyMaturity(Maturity maturity)
         {   
             ValidateMaturity(maturity);
             _context.Maturities.Add(maturity);
-            _context.SaveChangesAsync();  
+            _context.SaveChanges();  
         }
 
         public void AddPolicyPremium(Premium premium)
         {
             ValidatePremium(premium);
             _context.Premia.Add(premium);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public void AddNominee(Nominee nominee)
         {
             ValidateNominee(nominee);
             _context.Nominees.Add(nominee);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         //Views
@@ -152,17 +154,36 @@ namespace InsuranceBackend.Services
             //     {
             //         clientpolicies.Append(_clientpolicy);
             //     }
-            clientpolicies = _context.ClientPolicies.Where(c => c.ClientId == clientID).ToList();
+            clientpolicies = _context.ClientPolicies.Include(c => c.ClientId == clientID).ToList();
             return clientpolicies;
         }
 
-        public IEnumerable<Nominee> ViewNominees(int clientID)
+        public IEnumerable<Nominee> ViewClientNominees(int clientID)
         {
             ValidateClient(clientID);
-           return _context.Nominees.Include(n=>n.ClientId == clientID).ToList();
-        }     
-        
-       
+            using (var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"))
+            {
+                var cmd = new SqlCommand($"SELECT * FROM Nominees WHERE ClientId={clientID}", con);
+                var adapter = new SqlDataAdapter(cmd);
+                var dt = new DataTable();
+                adapter.Fill(dt);
+
+                var nominees = dt.AsEnumerable().Select(row =>
+                    new Nominee
+                    {
+                        NomineeId = row.Field<int>("NomineeId"),
+                        ClientId = row.Field<int>("ClientId"),
+                        NomineeName = row.Field<string>("NomineeName"),
+                        Relation = row.Field<string>("Relation"),
+                        Address = row.Field<string>("Address"),
+                        PhoneNum = row.Field <decimal> ("PhoneNum")
+                    }).ToList();
+                return nominees;
+            }
+           
+        }
+
+
 
         //Validations
         private void ValidatePremium(Premium premium)
@@ -172,7 +193,6 @@ namespace InsuranceBackend.Services
             else if(_context.Premia.FirstOrDefault(f=>f.ClientPolicyId==premium.ClientPolicyId) != null)
                 throw new ArgumentException(null, nameof(premium));
         }
-
         private void ValidateMaturity(Maturity maturity)
         {
             if (maturity == null)
@@ -219,7 +239,10 @@ namespace InsuranceBackend.Services
 
         private bool ValidateClient(int? clientId)
         {
-            throw new NotImplementedException();
+            var res = _context.Clients.FirstOrDefault(c=>c.ClientId == clientId);
+            if (res == null)
+                return false;
+            else return true;
         }
     }
 }

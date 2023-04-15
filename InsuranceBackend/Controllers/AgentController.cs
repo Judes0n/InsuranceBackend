@@ -44,7 +44,7 @@ namespace Insurance.Controllers
 
         public IEnumerable<ClientPolicy> GetClientPolicies(int agentId)
         {
-            List <ClientPolicy> res = _dbContext.ClientPolicies.Include(cp=>cp.AgentId == agentId).ToList();
+            var res = _dbContext.ClientPolicies.Where(cp=>cp.AgentId == agentId).ToList();
             return res;
         }
 
