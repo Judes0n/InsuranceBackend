@@ -34,6 +34,41 @@ namespace InsuranceBackend.Services
         public void ChangeUserStatus(User user)
         {   
             _context.Users.Update(user);
+            switch(user.Type)
+            {
+                case Enum.UserTypeEnum.Company:
+                    {
+                        var dbcompany = _context.Companies.FirstOrDefault(c => c.UserId == user.UserId);
+                        if (dbcompany != null)
+                        {
+                            dbcompany.Status = (Enum.ActorStatusEnum)user.Status;
+                            _context.Companies.Update(dbcompany);
+                        }
+                        break;
+                    }
+                case Enum.UserTypeEnum.Agent:
+                    {
+                        var dbagent = _context.Agents.FirstOrDefault(c => c.UserId == user.UserId);
+                        if (dbagent != null)
+                        {
+                            dbagent.Status = (Enum.ActorStatusEnum)(user.Status);
+                            _context.Agents.Update(dbagent);
+                        }
+                        break;
+                    }
+                case Enum.UserTypeEnum.Client:
+                    {
+                        var dbclient = _context.Clients.FirstOrDefault(c => c.UserId == user.UserId);
+                        if(dbclient != null)
+                        {
+                            dbclient.Status = (Enum.ActorStatusEnum)(user.Status);
+                            _context.Clients.Update(dbclient);
+                        }
+                        break;
+                    }
+                default:
+                    break;
+            }
             _context.SaveChanges();
         }
 
