@@ -122,8 +122,13 @@ namespace InsuranceBackend.Services
         public void AddNominee(Nominee nominee)
         {
             ValidateNominee(nominee);
-            _context.Nominees.Add(nominee);
-            _context.SaveChanges();
+            var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            con.Open();
+            var cmd = new SqlCommand("INSERT INTO Nominees(clientID,nomineeName,relation,address,phoneNum) VALUES('" + nominee.ClientId + "','" + nominee.NomineeName + "','" + nominee.Relation + "','"+nominee.Address+"','" + nominee.PhoneNum + "')", con);
+            cmd.ExecuteNonQuery();
+            con.Close();
+            //_context.Nominees.Add(nominee);
+            //_context.SaveChanges();
         }
 
         //Views
@@ -214,10 +219,10 @@ namespace InsuranceBackend.Services
             return _context.Agents.FirstOrDefault(a => a.AgentId == agentID) != null;
         }
 
-        private bool ValidateClient(int clientID)
-        {
-            return _context.Clients.FirstOrDefault(c => c.ClientId == clientID) != null; 
-        }
+        //private bool ValidateClient(int clientID)
+        //{
+        //    return _context.Clients.FirstOrDefault(c => c.ClientId == clientID) != null; 
+        //}
 
         private void ValidateClientPolicy(ClientPolicy clientPolicy)
         {
@@ -237,7 +242,7 @@ namespace InsuranceBackend.Services
                 throw new ArgumentException(null, nameof(nominee));
         }
 
-        private bool ValidateClient(int? clientId)
+        private bool ValidateClient(int clientId)
         {
             var res = _context.Clients.FirstOrDefault(c=>c.ClientId == clientId);
             if (res == null)

@@ -73,14 +73,24 @@ namespace InsuranceBackend.Services
             ValidatePolicy(policy);
             policy.PolicyId = 0;
             policy.Status = StatusEnum.Inactive;
-            _context.Policies.Add(policy);
-            _context.SaveChanges();
+            var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            con.Open();
+            var cmd = new SqlCommand("INSERT INTO Policies(companyID,policytypeID,policyName,timePeriod,policyAmount,status) VALUES('" + policy.CompanyId + "','" + policy.PolicytypeId + "','" + policy.PolicyName + "','" + policy.TimePeriod + "','" + policy.PolicyAmount + "','" + policy.Status + "')", con);
+            cmd.ExecuteNonQuery();
+            con.Close();
+            //_context.Policies.Add(policy);
+            //_context.SaveChanges();
         }
 
         public void AddPolicyTerm(PolicyTerm policyTerm)
         {
-            _context.PolicyTerms.Add(policyTerm);
-            _context.SaveChanges();
+            var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            con.Open();
+            var cmd = new SqlCommand("INSERT INTO PolicyTerms(policyID,period,terms,premiumAmount) VALUES('" + policyTerm.PolicyId + "','" + policyTerm.Period + "','" + policyTerm.Terms + "','" + policyTerm.PremiumAmount +"')", con);
+            cmd.ExecuteNonQuery();
+            con.Close();
+            //_context.PolicyTerms.Add(policyTerm);
+            //_context.SaveChanges();
         }
 
         public Policy GetPolicy(int policyId)
@@ -128,6 +138,18 @@ namespace InsuranceBackend.Services
             return _context.Policies.Include(p=>p.CompanyId==companyID).ToList();
         }
 
+
+        public AgentCompany CreateReferral(AgentCompany _agentCompany)
+        {
+            Random random = new();
+            var dbcompany = _context.Companies.First(c => c.CompanyId == _agentCompany.CompanyId);
+            var dbagent = _context.Agents.First(a => a.AgentId == _agentCompany.AgentId);
+            Retry:
+            _agentCompany.Referral = dbcompany.CompanyName + dbagent.AgentName + random.Next(1,1000);
+            var dbac = _context.AgentCompanies.FirstOrDefault(ac => ac.Referral == _agentCompany.Referral);
+            if (dbac != null) goto Retry;
+            return _agentCompany;
+        }
 
         //Validations
         private void ValidatePolicy(Policy policy)

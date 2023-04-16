@@ -34,7 +34,7 @@ namespace InsuranceBackend.Controllers
         [HttpPost]
         [Route("AddPolicy")]
 
-        public IActionResult AddPolicy(Policy policy)
+        public IActionResult AddPolicy([FromBody]Policy policy)
         {
             if (policy == null)
                 throw new ArgumentNullException(nameof(policy));
@@ -93,9 +93,9 @@ namespace InsuranceBackend.Controllers
             int id = int.Parse(Request.Form["id"]);
             int status = int.Parse(Request.Form["status"]);
             AgentCompany agentCompany = new();
-            agentCompany = _dbContext.AgentCompanies.FirstOrDefault(ac => ac.Id == id);
+            agentCompany = _dbContext.AgentCompanies.First(ac => ac.Id == id);
             agentCompany.Status =(StatusEnum)status;
-            if (status != 1)
+            if (status == 0)
             {
                 _dbContext.AgentCompanies.Update(agentCompany);
                 _dbContext.SaveChanges();
@@ -103,18 +103,8 @@ namespace InsuranceBackend.Controllers
             }
             else
             {
-                var dbcompany = _dbContext.Companies.FirstOrDefault(c => c.CompanyId == agentCompany.CompanyId);
-                var dbagent = _dbContext.Agents.FirstOrDefault(a => a.AgentId == agentCompany.AgentId);
-                Random random = new();
-            Retry:
-                agentCompany.Referral = dbcompany.CompanyName + dbagent.AgentName + random.Next(1, 1000);
-                var dbac = _dbContext.AgentCompanies.FirstOrDefault(ac => ac.Referral == agentCompany.Referral);
-                if (dbac == null)
-                {
-                    _dbContext.AgentCompanies.Update(agentCompany);
-                }
-                else
-                    goto Retry;
+                agentCompany = _companyService.CreateReferral(agentCompany);
+                _dbContext.AgentCompanies.Update(agentCompany);
                 _dbContext.SaveChanges();
                 return Ok(agentCompany);
             }
