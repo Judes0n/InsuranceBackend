@@ -21,9 +21,7 @@ public partial class Policy
 
     public StatusEnum Status { get; set; }
 
-    [JsonIgnore]
     public virtual Company Company { get; set; } = null!;
     public virtual ICollection<PolicyTerm> PolicyTerms { get; } = new List<PolicyTerm>();
-    [JsonIgnore]
     public virtual PolicyType Policytype { get; set; } = null!;
 }

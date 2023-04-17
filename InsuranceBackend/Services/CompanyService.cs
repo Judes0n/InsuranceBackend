@@ -72,11 +72,14 @@ namespace InsuranceBackend.Services
         {
             ValidatePolicy(policy);
             policy.PolicyId = 0;
-            policy.Status = StatusEnum.Inactive;
+            policy.Status = (int)StatusEnum.Inactive;
             var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
             con.Open();
-            var cmd = new SqlCommand("INSERT INTO Policies(companyID,policytypeID,policyName,timePeriod,policyAmount,status) VALUES('" + policy.CompanyId + "','" + policy.PolicytypeId + "','" + policy.PolicyName + "','" + policy.TimePeriod + "','" + policy.PolicyAmount + "','" + policy.Status + "')", con);
+            var cmd = new SqlCommand("INSERT INTO Policies(companyID,policytypeID,policyName,timePeriod,policyAmount,status) VALUES('" + policy.CompanyId + "','" + policy.PolicytypeId + "','" + policy.PolicyName + "','" + policy.TimePeriod + "','" + policy.PolicyAmount + "','" +(int) policy.Status + "')", con);
             cmd.ExecuteNonQuery();
+            var PolicyId = _context.Policies.OrderByDescending(p => p.PolicyId).FirstOrDefault().PolicyId;
+            var cmd2 = new SqlCommand("INSERT INTO PolicyTerms(policyID,period,terms,premiumAmount) VALUES('" + PolicyId + "','" + policy.TimePeriod + "',1,'" + (float) policy.PolicyAmount * 0.8 + "')", con);
+            cmd2.ExecuteNonQuery();
             con.Close();
             //_context.Policies.Add(policy);
             //_context.SaveChanges();

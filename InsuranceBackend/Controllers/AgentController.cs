@@ -35,7 +35,7 @@ namespace Insurance.Controllers
 
         public IEnumerable<Policy> Getpolicies(int companyId)
         {
-            var res = _dbContext.Policies.Include(a=>a.CompanyId == companyId).ToList();
+            var res = _dbContext.Policies.Where(a=>a.CompanyId == companyId).ToList();
             return res;
         }
 

@@ -89,8 +89,19 @@ namespace InsuranceBackend.Controllers
         [HttpPut]
         [Route("ChangePolicyStatus")]
 
-        public IActionResult UpdatePolicy(Policy policy)
+        public IActionResult UpdatePolicy()
         {
+            Policy policy = new Policy()
+            {
+                PolicyId = int.Parse(Request.Form["policyId"]),
+                CompanyId = int.Parse(Request.Form["companyId"]),
+                PolicytypeId = int.Parse(Request.Form["policytypeId"]),
+                PolicyName = Request.Form["policyName"],
+                TimePeriod = int.Parse(Request.Form["timePeriod"]),
+                PolicyAmount = int.Parse(Request.Form["policyAmount"]),
+                Status = (StatusEnum) int.Parse(Request.Form["status"])
+            };
+
             _adminService.ChangePolicyStatus(policy);
             return Ok(policy);
         }

@@ -39,8 +39,17 @@ namespace InsuranceBackend.Controllers
         [HttpPost]
         [Route("AddNominee")]
 
-        public IActionResult AddNominee(Nominee nominee)
+        public IActionResult AddNominee()
         {
+            Nominee nominee = new Nominee()
+            {
+                NomineeName = Request.Form["nomineeName"],
+                PhoneNum = Request.Form["phoneNum"],
+                Relation = Request.Form["Relation"],
+                ClientId = int.Parse(Request.Form["clientId"]),
+                Address = Request.Form["address"],
+            };
+
             _clientService.AddNominee(nominee);
             return Ok(nominee);
         }

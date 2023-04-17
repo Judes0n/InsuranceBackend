@@ -4,6 +4,7 @@ using InsuranceBackend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using System.Text.Json.Serialization;
 
 namespace InsuranceBackend.Controllers
@@ -34,18 +35,37 @@ namespace InsuranceBackend.Controllers
         [HttpPost]
         [Route("AddPolicy")]
 
-        public IActionResult AddPolicy([FromBody]Policy policy)
+        public IActionResult AddPolicy()
         {
+            Policy policy = new();
+
+            policy.PolicyId = int.Parse(Request.Form["policyId"]);
+            policy.CompanyId = int.Parse(Request.Form["companyId"]);
+            policy.PolicyName = Request.Form["policyName"];
+            policy.PolicytypeId = int.Parse(Request.Form["policytypeId"]);
+            policy.PolicyAmount = int.Parse(Request.Form["policyAmount"]);
+            policy.TimePeriod = int.Parse(Request.Form["timePeriod"]);
+            policy.Status = (int)StatusEnum.Inactive;
+          
+           
             if (policy == null)
                 throw new ArgumentNullException(nameof(policy));
-             _companyService.AddPolicy(policy);
-             return Ok(policy);
+
+            _companyService.AddPolicy(policy);
+            return Ok(policy);
         }
 
         [HttpPost]
         [Route("AddPolicyTerm")]
-        public IActionResult AddPolicyTerm(PolicyTerm policyterm)
+        public IActionResult AddPolicyTerm()
         {
+            PolicyTerm policyterm = new();
+
+            policyterm.PolicyId = int.Parse(Request.Form["policyId"]);
+            policyterm.Terms = int.Parse(Request.Form["terms"]);
+            policyterm.PremiumAmount = int.Parse(Request.Form["premiumAmount"]);
+            policyterm.Period = int.Parse(Request.Form["period"]);
+           
             if (policyterm == null)
                 throw new ArgumentNullException(nameof(policyterm));
             _companyService.AddPolicyTerm(policyterm);
