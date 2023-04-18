@@ -118,7 +118,7 @@ namespace InsuranceBackend.Services
         public void ChangeAgentRequest(int agentID, StatusEnum e)
         {
             ValidateAgentRequest(agentID);
-            var dbreq = _context.AgentCompanies.FirstOrDefault(a => a.AgentId == agentID) ?? throw new ArgumentNullException();
+            AgentCompany dbreq = _context.AgentCompanies.FirstOrDefault(a => a.AgentId == agentID) ?? throw new ArgumentNullException();
             if (!StatusEnum.IsDefined(typeof(StatusEnum), e))
             {
                 throw new Exception();

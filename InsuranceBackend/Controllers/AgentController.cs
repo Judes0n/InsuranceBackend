@@ -75,23 +75,34 @@ namespace Insurance.Controllers
             List<Agent> result = new List<Agent>();
             foreach (var agentid in agents)
             {
-                result.Add(_dbContext.Agents.FirstOrDefault(a => a.AgentId == agentid));
+                result.Add(_dbContext.Agents.First(a => a.AgentId == agentid));
             }
             return result;
+        }
+        [HttpGet]
+        [Route("GetRefs")]
+
+        public IActionResult GetRefs(int agentId,int companyId)
+        {
+           
+            var a = _dbContext.AgentCompanies.First(ac => ac.CompanyId == companyId && ac.AgentId == agentId);
+            return Ok(a);
         }
 
         [HttpGet]
         [Route("GetCompanies")]
 
         public IEnumerable<Company> GetCompaniesby(int agentId) 
-        { 
-            var companies = _dbContext.AgentCompanies.Where(ac=>ac.AgentId == agentId).Select(a=>a.CompanyId).ToList();
-            List<Company> result = new();
-            foreach(var companyid in companies)
-            {
-                result.Add(_dbContext.Companies.FirstOrDefault(c => c.CompanyId == companyid));
-            }
-            return result;  
+        {
+            
+                var companies = _dbContext.AgentCompanies.Where(ac => ac.AgentId == agentId).Select(a => a.CompanyId).ToList();
+                List<Company> result = new();
+                foreach (var companyid in companies)
+                {
+                    var res = _dbContext.Companies.First(c => c.CompanyId == companyid);
+                    result.Add(res);
+                }
+                return result;
         }
 
         [HttpGet]
