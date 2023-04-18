@@ -3,8 +3,11 @@ using InsuranceBackend.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace InsuranceBackend.Services
 {
@@ -119,6 +122,46 @@ namespace InsuranceBackend.Services
             _context.SaveChanges();
         }
 
+        public IEnumerable<Policy> GetPolicies(int typeId=0,int order =0,int agentId=0)
+        {
+            List<Policy>? policies = new();  
+            if(agentId != 0)
+            {
+                var agentpolicies = new List<Policy>();
+                var comps = _context.AgentCompanies.Where(ac => ac.AgentId.Equals(agentId)).Select(ac=>ac.CompanyId).ToArray();
+                foreach(var compid in comps)
+                {
+                    agentpolicies.Add((Policy)_context.Policies.Where(p => p.CompanyId.Equals(compid)&& p.Status == StatusEnum.Active));
+                }
+                policies = agentpolicies;
+            }
+            if(typeId != 0)
+            {
+              if(agentId!=0)
+                {
+                    policies = null;
+                    var comps = _context.AgentCompanies.Where(ac => ac.AgentId.Equals(agentId)).Select(ac => ac.CompanyId).ToArray();
+                    foreach (var compid in comps)
+                    {
+                        policies.Add((Policy)_context.Policies.Where(p => p.CompanyId.Equals(compid) && p.Status == StatusEnum.Active && p.PolicytypeId == typeId));
+                    }
+                }
+              else
+              policies = _context.Policies.Where(p=>p.PolicytypeId == typeId && p.Status == StatusEnum.Active).ToList();  
+            }
+            if (order != 0)
+            {
+                policies.OrderByDescending(p => p.PolicyId);
+            }
+            if(policies .Count > 0)
+            {
+                _context.Policies.Where(p => p.Status == StatusEnum.Active).ToList();
+            }
+            return policies;
+        }
+        
+
+        //Nominees
         public void AddNominee(Nominee nominee)
         {
             ValidateNominee(nominee);

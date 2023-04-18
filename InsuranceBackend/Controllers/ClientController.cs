@@ -63,5 +63,27 @@ namespace InsuranceBackend.Controllers
             return nominees;
         }
 
+        [HttpGet]
+        [Route("ViewPolicies")]
+
+        public IEnumerable<Policy> GetPolicies(int policytypeId = 0,int agentId=0,int order=0)
+        {
+             
+            if (policytypeId != 0 && order !=0) {
+               return _clientService.GetPolicies(typeId:policytypeId,order:1);
+            }
+            else if(agentId != 0 && order !=0)
+            {
+               return _clientService.GetPolicies(agentId: agentId,order:1);
+            }
+            else if(order !=0)
+            {
+                return _clientService.GetPolicies(order:order);
+            }
+            else
+                return _clientService.GetPolicies();
+            
+        }
+        //ClientPolicies
     }
 }
