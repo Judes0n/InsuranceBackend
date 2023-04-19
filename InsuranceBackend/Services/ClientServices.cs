@@ -153,9 +153,9 @@ namespace InsuranceBackend.Services
             {
                 policies.OrderByDescending(p => p.PolicyId);
             }
-            if(policies .Count > 0)
+            if(policies .Count == 0)
             {
-                _context.Policies.Where(p => p.Status == StatusEnum.Active).ToList();
+               policies = _context.Policies.Where(p => p.Status == StatusEnum.Active).ToList();
             }
             return policies;
         }
