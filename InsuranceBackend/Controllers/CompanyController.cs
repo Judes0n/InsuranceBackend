@@ -59,13 +59,14 @@ namespace InsuranceBackend.Controllers
         [Route("AddPolicyTerm")]
         public IActionResult AddPolicyTerm()
         {
-            PolicyTerm policyterm = new();
+            PolicyTerm policyterm = new()
+            {
+                PolicyId = int.Parse(Request.Form["policyId"]),
+                Terms = int.Parse(Request.Form["terms"]),
+                PremiumAmount = int.Parse(Request.Form["premiumAmount"]),
+                Period = int.Parse(Request.Form["period"])
+            };
 
-            policyterm.PolicyId = int.Parse(Request.Form["policyId"]);
-            policyterm.Terms = int.Parse(Request.Form["terms"]);
-            policyterm.PremiumAmount = int.Parse(Request.Form["premiumAmount"]);
-            policyterm.Period = int.Parse(Request.Form["period"]);
-           
             if (policyterm == null)
                 throw new ArgumentNullException(nameof(policyterm));
             _companyService.AddPolicyTerm(policyterm);
@@ -129,6 +130,19 @@ namespace InsuranceBackend.Controllers
                 return Ok(agentCompany);
             }
         }
+
+        [HttpPost]
+        [Route("ChangePolicyStatus")]
+
+        public IActionResult PStatusChange()
+        {
+            int cpid = int.Parse(Request.Form["policyId"]);
+            StatusEnum status = (StatusEnum)int.Parse(Request.Form["status"]); 
+            var dbpolicy = _companyService.GetPolicy(cpid);
+            dbpolicy.Status = status;
+            return Ok(_companyService.UpdatePolicy(dbpolicy));
+        }
+
 
         [HttpGet]
         [Route("GetAgentCompany")]

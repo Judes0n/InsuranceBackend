@@ -94,11 +94,18 @@ namespace InsuranceBackend.Services
             UpdateClient(_clientID, dbclient);
         }
         //ClientPolicies && ClientDeath
-        public void AddClientPolicy(ClientPolicy clientPolicy)
+        public ClientPolicy AddClientPolicy(ClientPolicy clientPolicy)
         {
             ValidateClientPolicy(clientPolicy);
-            _context.ClientPolicies.Add(clientPolicy);
-            _context.SaveChanges();
+            var testcp = _context.ClientPolicies.First(cp => cp.PolicyTermId == clientPolicy.PolicyTermId);
+            if (testcp == null)
+            {
+                _context.ClientPolicies.Add(clientPolicy);
+                _context.SaveChanges();
+                clientPolicy = _context.ClientPolicies.OrderBy(cp => cp.ClientPolicyId).Last();
+                return clientPolicy;
+            }
+            return new ClientPolicy();
         }
 
         public void AddClientDeath(ClientDeath clientDeath)
@@ -121,6 +128,19 @@ namespace InsuranceBackend.Services
             _context.Premia.Add(premium);
             _context.SaveChanges();
         }
+
+        public Payment MakePayment(Payment payment)
+        {
+            if(_context.ClientPolicies.First(cp=>cp.ClientPolicyId == payment.ClientPolicyId)!=null)
+            {
+                _context.Payments.Add(payment);
+                _context.SaveChanges();
+               return _context.Payments.OrderBy(p=>p.PaymentId).Last();
+            }
+            return new Payment();
+        }
+
+        //Views
 
         public IEnumerable<Policy> GetPolicies(int typeId=0,int order =0,int agentId=0)
         {
@@ -185,8 +205,14 @@ namespace InsuranceBackend.Services
         //Views
         public IEnumerable<Maturity> ViewMaturities(int clientID)
         {        
-            IEnumerable<Maturity> maturities=new List<Maturity>();
-            maturities = _context.Maturities.Include(m => m.ClientPolicyId).Where(m => m.ClientPolicy.ClientId == clientID).ToList();
+           var maturities=new List<Maturity>();
+           var dbpolicies = _context.ClientPolicies.Where(p => p.ClientId == clientID).ToList();
+            foreach (var cpolicy in dbpolicies) 
+            {
+                var dbm = _context.Maturities.FirstOrDefault(m => m.ClientPolicyId == cpolicy.ClientPolicyId);
+                if(dbm != null)
+                maturities.Add(dbm);
+            }
             return maturities;
         }
 

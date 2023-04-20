@@ -101,5 +101,47 @@ namespace InsuranceBackend.Controllers
             return _clientService.GetCompanies();
         }
         //ClientPolicies
+        [HttpPost]
+        [Route("AddClientPolicy")]
+        public IActionResult AddClientPolicy()
+        {
+            ClientPolicy clientPolicy = new()
+            {
+                ClientId = int.Parse(Request.Form["clientId"]),
+                PolicyTermId = int.Parse(Request.Form["policyTermId"]),
+                NomineeId = int.Parse(Request.Form["nomineeId"]),
+                StartDate = Request.Form["startDate"],
+                ExpDate = Request.Form["expDate"],
+                Counter = int.Parse(Request.Form["counter"]),
+                Status = Enum.ClientPolicyStatusEnum.Inactive,
+                Referral = Request.Form["referral"],
+                AgentId = int.Parse(Request.Form["agentId"])
+            };
+            return Ok(_clientService.AddClientPolicy(clientPolicy));
+        }
+
+        [HttpPost]
+        [Route("Payment")]
+
+        public IActionResult MakePayment() 
+        {
+            Payment payment = new()
+            {
+                ClientPolicyId = int.Parse(Request.Form["clientPolicyId"]),
+                TransactionId = int.Parse(Request.Form["transactionId"]),
+                Time = Request.Form["time"],
+                Amount = int.Parse(Request.Form["amount"]),
+                Status = Enum.PaymentStatusEnum.Processing
+            };
+            return Ok(_clientService.MakePayment(payment));
+        }
+
+        [HttpGet]
+        [Route("ViewMaturity")]
+
+        public IEnumerable<Maturity> ViewMaturities(int clientId)
+        {
+            return _clientService.ViewMaturities(clientId);
+        }
     }
 }

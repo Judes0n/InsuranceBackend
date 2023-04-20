@@ -68,6 +68,13 @@ namespace InsuranceBackend.Services
             return GetCompany(companyID);
         }
 
+        public Policy UpdatePolicy(Policy policy)
+        {
+            _context.Policies.Update(policy);
+            _context.SaveChanges();
+            return _context.Policies.First(p=>p.PolicyId == policy.PolicyId);
+        }
+
         public void AddPolicy(Policy policy)
         {
             ValidatePolicy(policy);
