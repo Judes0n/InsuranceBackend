@@ -160,7 +160,15 @@ namespace InsuranceBackend.Services
             return policies;
         }
         
+        public IEnumerable<PolicyType> GetTypes()
+        {
+            return _context.PolicyTypes.ToList();
+        }
 
+        public IEnumerable<Company> GetCompanies()
+        {
+            return _context.Companies.ToList();
+        }
         //Nominees
         public void AddNominee(Nominee nominee)
         {

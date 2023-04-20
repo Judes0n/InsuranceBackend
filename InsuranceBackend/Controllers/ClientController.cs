@@ -84,6 +84,22 @@ namespace InsuranceBackend.Controllers
                 return _clientService.GetPolicies();
             
         }
+
+        [HttpGet]
+        [Route("GetTypes")]
+
+        public IEnumerable<PolicyType> GetTypes()
+        {
+            return _clientService.GetTypes();
+        }
+
+        [HttpGet]
+        [Route("GetCompanies")]
+
+        public IEnumerable<Company> GetCompanies()
+        {
+            return _clientService.GetCompanies();
+        }
         //ClientPolicies
     }
 }
