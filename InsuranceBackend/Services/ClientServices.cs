@@ -4,10 +4,13 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Logging;
 using System.Data;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace InsuranceBackend.Services
 {
@@ -58,29 +61,22 @@ namespace InsuranceBackend.Services
   
         public Client AddClient(Client client)
         {
-            try
-            {
-                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users ON");
-                //_context.Clients.Add(client);
-                //_context.SaveChanges();
-                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
-
+                if(GetClientById(client.UserId) != null) 
+                {
+                    throw new Exception(null);
+                }
                 var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
                 con.Open();
                 var cmd = new SqlCommand("INSERT INTO Clients(userID,clientName,gender,dob,address,profilePic,phoneNum,email,status) VALUES('" + client.UserId + "','" + client.ClientName + "','" + client.Gender + "','Dob','Address','" + client.ProfilePic + "','" + client.PhoneNum + "','" + client.Email + "',0)", con);
                 cmd.ExecuteNonQuery();
                 con.Close();
-                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
-            }
-            catch (Exception)
-            {
-                throw new Exception(null);
-            }
+                
+            
             //var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
             //con.Open();
-            //var cmd = new SqlCommand("INSERT INTO Clients(userID,clientName,gender,dob,address,profilePic,phoneNum,email,status) VALUES('" + client.UserId + "','" + client.ClientName + "','Male','Dob','Address','" + client.ProfilePic + "','" + client.PhoneNum + "','" + client.Email + "',0)", con);
+            //var cmd = new SqlCommand("INSERT INTO ClientPolicy(clientID,policyTermID,nomineeID,startDate,expDate,counter,status,referral,agentID) VALUES()", con);
             //cmd.ExecuteNonQuery();
-            return GetClientByName(client.ClientName);
+            return _context.Clients.OrderBy(c => c.ClientId).Last();
         }
         //approvals
         public void ChangeClientStatus(int _clientID,ActorStatusEnum e)
@@ -97,15 +93,17 @@ namespace InsuranceBackend.Services
         public ClientPolicy AddClientPolicy(ClientPolicy clientPolicy)
         {
             ValidateClientPolicy(clientPolicy);
-            var testcp = _context.ClientPolicies.First(cp => cp.PolicyTermId == clientPolicy.PolicyTermId);
+            var testcp = _context.ClientPolicies.FirstOrDefault(cp => cp.PolicyTermId == clientPolicy.PolicyTermId);
             if (testcp == null)
             {
-                _context.ClientPolicies.Add(clientPolicy);
-                _context.SaveChanges();
+                var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+                con.Open();
+                var cmd = new SqlCommand("INSERT INTO ClientPolicy(clientID,policyTermID,nomineeID,startDate,expDate,counter,status,referral,agentID) VALUES('"+clientPolicy.ClientId+"','"+clientPolicy.PolicyTermId+"','"+clientPolicy.NomineeId+"','"+clientPolicy.StartDate+"','"+clientPolicy.ExpDate+"','"+clientPolicy.Counter+"','"+(int)StatusEnum.Inactive+"','"+clientPolicy.Referral+"','"+clientPolicy.AgentId+"')", con);
+                cmd.ExecuteNonQuery();
                 clientPolicy = _context.ClientPolicies.OrderBy(cp => cp.ClientPolicyId).Last();
                 return clientPolicy;
             }
-            return new ClientPolicy();
+            return new ClientPolicy() { PolicyTermId = 0};
         }
 
         public void AddClientDeath(ClientDeath clientDeath)
@@ -129,17 +127,32 @@ namespace InsuranceBackend.Services
             _context.SaveChanges();
         }
 
+        public IEnumerable<PolicyTerm> GetPterms(int policyId)
+        {
+            return _context.PolicyTerms.Where(pt=>pt.PolicyId == policyId).ToList();
+        }
+
+
         public Payment MakePayment(Payment payment)
         {
-            if(_context.ClientPolicies.First(cp=>cp.ClientPolicyId == payment.ClientPolicyId)!=null)
+            if (_context.ClientPolicies.First(cp => cp.ClientPolicyId == payment.ClientPolicyId) != null)
             {
                 _context.Payments.Add(payment);
                 _context.SaveChanges();
-               return _context.Payments.OrderBy(p=>p.PaymentId).Last();
+                return _context.Payments.OrderBy(p => p.PaymentId).Last();
             }
             return new Payment();
         }
-
+        
+        public AgentCompany ValidateReferral(string referral)
+        {
+           var res = _context.AgentCompanies.FirstOrDefault(ac => ac.Referral == referral);
+            if (res != null)
+            {
+                return res;
+            }
+            else return new AgentCompany();
+        }
         //Views
 
         public IEnumerable<Policy> GetPolicies(int typeId=0,int order =0,int agentId=0)

@@ -143,5 +143,23 @@ namespace InsuranceBackend.Controllers
         {
             return _clientService.ViewMaturities(clientId);
         }
+
+        [HttpGet]
+        [Route("ValidateReferral")]
+
+        public IActionResult ValidateRef(string referral)
+        {
+            var res = _clientService.ValidateReferral(referral);
+            return Ok(res);
+        }
+
+        [HttpGet]
+        [Route("GetTerms")]
+
+        public IEnumerable<PolicyTerm> GetTerms(int policyId)
+        {
+            var res = _clientService.GetPterms(policyId);
+            return res;
+        }
     }
 }
