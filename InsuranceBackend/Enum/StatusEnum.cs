@@ -4,6 +4,7 @@
     {
         Inactive,
         Active,
-        Blocked
+        Blocked,
+        Deprecated
     }
 }

@@ -78,6 +78,23 @@ namespace InsuranceBackend.Services
             //cmd.ExecuteNonQuery();
             return _context.Clients.OrderBy(c => c.ClientId).Last();
         }
+
+        public IEnumerable<ClientPolicy> GetCPolicies(int clientID)
+        {
+            return _context.ClientPolicies.Where(cp=>cp.ClientId == clientID).ToList();
+        }
+
+        public IEnumerable<Maturity> GetMaturities(int clientID)
+        {
+            var mps = new List<Maturity>();
+            var cps = _context.ClientPolicies.Where(cp => cp.ClientId == clientID).ToList();
+            foreach(var cp in cps)
+            {
+                var a = _context.Maturities.FirstOrDefault(m => m.ClientPolicyId == cp.ClientPolicyId);
+                if(a != null) { mps.Add(a); }
+            }
+            return mps;
+        }
         //approvals
         public void ChangeClientStatus(int _clientID,ActorStatusEnum e)
         {
@@ -239,18 +256,6 @@ namespace InsuranceBackend.Services
         public List<ClientDeath> ViewClientDeath(int clientID)
         {
             return _context.ClientDeaths.Include(c => c.ClientPolicyId).Where(c => c.ClientPolicy.ClientId == clientID).ToList();
-        }
-
-        public IEnumerable<ClientPolicy> ViewClientPolicies(int clientID)
-        {
-            IEnumerable<ClientPolicy> clientpolicies = new List<ClientPolicy>();
-            //foreach (var _clientpolicy in _context.ClientPolicies)
-            //     if(_clientpolicy.ClientId == _clientID)
-            //     {
-            //         clientpolicies.Append(_clientpolicy);
-            //     }
-            clientpolicies = _context.ClientPolicies.Include(c => c.ClientId == clientID).ToList();
-            return clientpolicies;
         }
 
         public IEnumerable<Nominee> ViewClientNominees(int clientID)

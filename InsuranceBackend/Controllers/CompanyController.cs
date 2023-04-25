@@ -131,7 +131,7 @@ namespace InsuranceBackend.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("ChangePolicyStatus")]
 
         public IActionResult PStatusChange()

@@ -71,8 +71,19 @@ namespace InsuranceBackend.Services
         public Policy UpdatePolicy(Policy policy)
         {
             _context.Policies.Update(policy);
+            var pts = _context.PolicyTerms.Where(pt=>pt.PolicyId == policy.PolicyId).ToList();
+            foreach (var pt in pts)
+            {
+               var cp = _context.ClientPolicies.Where(cp => cp.PolicyTermId == pt.PolicyTermId).ToList();
+                foreach (var c in cp)
+                {
+                    var dcp = _context.ClientPolicies.First(c => c.ClientPolicyId == c.ClientPolicyId);
+                    dcp.Status = ClientPolicyStatusEnum.Deprecated;
+                    _context.ClientPolicies.Update(dcp);
+                }
+            }
             _context.SaveChanges();
-            return _context.Policies.First(p=>p.PolicyId == policy.PolicyId);
+            return _context.Policies.OrderBy(p=>p.PolicyId).Last();
         }
 
         public void AddPolicy(Policy policy)

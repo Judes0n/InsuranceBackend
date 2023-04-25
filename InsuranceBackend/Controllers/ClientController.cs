@@ -161,5 +161,21 @@ namespace InsuranceBackend.Controllers
             var res = _clientService.GetPterms(policyId);
             return res;
         }
+
+        [HttpGet]
+        [Route("GetClientPolicies")]
+
+        public IEnumerable <ClientPolicy> GetClientPolicies(int clientId) 
+        { 
+            return _clientService.GetCPolicies(clientId);
+        }
+
+        [HttpGet]
+        [Route("GetMaturities")]
+
+        public IEnumerable <Maturity> GetMaturities(int clientId)
+        {
+            return _clientService.GetMaturities(clientId);
+        }
     }
 }

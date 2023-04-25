@@ -26,8 +26,7 @@ namespace Insurance.Controllers
 
         public IActionResult GetTerms(int policytermId)
         {
-            var res = _dbContext.PolicyTerms.FirstOrDefault(pt => pt.PolicyTermId == policytermId);
-            return Ok(res);
+            return Ok(_dbContext.PolicyTerms.FirstOrDefault(pt => pt.PolicyTermId == policytermId));
         }
 
         [HttpGet]
@@ -114,7 +113,7 @@ namespace Insurance.Controllers
             List<Client> result = new();
             foreach(var clientid in clients)
             {
-                result.Add(_dbContext.Clients.FirstOrDefault(c=>c.ClientId == clientid));
+                result.Add(_dbContext.Clients.First(c=>c.ClientId == clientid && c.Status == ActorStatusEnum.Approved));
             }
             return result;
         }
@@ -165,8 +164,16 @@ namespace Insurance.Controllers
         [HttpPost]
         [Route("AddClientDeath")]
 
-        public IActionResult AddClientDeath(ClientDeath clientDeath) 
-        { 
+        public IActionResult AddClientDeath() 
+        {
+            ClientDeath clientDeath = new()
+            {
+                ClientDeathId = 0,
+                ClientPolicyId = int.Parse(Request.Form["clientPolicyId"]),
+                Dod = Request.Form["dod"],
+                StartDate = Request.Form["startDate"],
+                ClaimAmount = int.Parse(Request.Form["claimAmount"])
+            };
            _agentServices.AddClientDeath(clientDeath);
             return Ok(clientDeath);
         }
@@ -174,19 +181,30 @@ namespace Insurance.Controllers
         [HttpPost]
         [Route("AddMaturity")]
 
-        public IActionResult AddMaturity(Maturity maturity)
+        public IActionResult AddMaturity()
         {
-            _agentServices.AddMaturity(maturity);
-            return Ok(maturity);
+            Maturity maturity = new()
+            {
+              ClientPolicyId = int.Parse(Request.Form["clientPolicyId"]),
+              MaturityDate = Request.Form["maturityDate"],
+              ClaimAmount = int.Parse(Request.Form["claimAmount"]),
+              StartDate = Request.Form["startDate"]
+            };            
+            return Ok(_agentServices.AddMaturity(maturity));
         }
 
         [HttpPost]
         [Route("AddPenalty")]
 
-        public IActionResult AddPenalty(Premium premium)
+        public IActionResult AddPenalty()
         {
-            _agentServices.AddPenalty(premium);
-            return Ok(premium);
+            Premium premium = new()
+            {
+                ClientPolicyId = int.Parse(Request.Form["clientPolicyId"]),
+                DateOfCollection = Request.Form["dateOfCollection"],
+                Penalty = int.Parse(Request.Form["penality"])
+            };
+            return Ok(_agentServices.AddPenalty(premium));
         }
     }
 }

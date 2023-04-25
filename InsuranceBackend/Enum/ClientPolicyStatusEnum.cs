@@ -5,6 +5,7 @@
         Inactive,
         Active,
         Blocked,
-        Mature
+        Mature,
+        Deprecated
     }
 }

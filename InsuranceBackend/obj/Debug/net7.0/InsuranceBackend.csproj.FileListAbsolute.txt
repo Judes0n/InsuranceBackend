@@ -150,3 +150,7 @@ E:\ASP Projects\Core\InsuranceBackend\InsuranceBackend\obj\Debug\net7.0\refint\I
 E:\ASP Projects\Core\InsuranceBackend\InsuranceBackend\obj\Debug\net7.0\InsuranceBackend.pdb
 E:\ASP Projects\Core\InsuranceBackend\InsuranceBackend\obj\Debug\net7.0\InsuranceBackend.genruntimeconfig.cache
 E:\ASP Projects\Core\InsuranceBackend\InsuranceBackend\obj\Debug\net7.0\ref\InsuranceBackend.dll
+E:\ASP Projects\Core\InsuranceBackend\InsuranceBackend\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+E:\ASP Projects\Core\InsuranceBackend\InsuranceBackend\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+E:\ASP Projects\Core\InsuranceBackend\InsuranceBackend\bin\Debug\net7.0\Newtonsoft.Json.dll
+E:\ASP Projects\Core\InsuranceBackend\InsuranceBackend\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll
