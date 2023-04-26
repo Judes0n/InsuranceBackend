@@ -210,6 +210,16 @@ namespace InsuranceBackend.Services
             return policies;
         }
         
+        public ClientPolicy GetClientPolicy(int clientpolicyId)
+        {
+            return _context.ClientPolicies.FirstOrDefault(cp => cp.ClientPolicyId == clientpolicyId);
+        }
+
+        public PolicyTerm GetPolicyTerm(int policytermId)
+        {
+            return _context.PolicyTerms.FirstOrDefault(pt => pt.PolicyTermId == policytermId);
+        }
+
         public IEnumerable<PolicyType> GetTypes()
         {
             return _context.PolicyTypes.ToList();

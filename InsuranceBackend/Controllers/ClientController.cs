@@ -100,6 +100,23 @@ namespace InsuranceBackend.Controllers
         {
             return _clientService.GetCompanies();
         }
+
+        [HttpGet]
+        [Route("GetCPolicy")]
+
+        public IActionResult GetCPolicy(int clientpolicyId)
+        {
+            return Ok(_clientService.GetClientPolicy(clientpolicyId));
+        }
+
+        [HttpGet]
+        [Route("GetPTerm")]
+
+        public IActionResult GetPterm(int policytermId )
+        {
+            return Ok(_clientService.GetPolicyTerm(policytermId));
+        }
+
         //ClientPolicies
         [HttpPost]
         [Route("AddClientPolicy")]
