@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="NewFolder\" />
     <Folder Include="Resources\Images\Companies\" />
     <Folder Include="Resources\Images\Agents\" />
     <Folder Include="Resources\Images\Clients\" />
