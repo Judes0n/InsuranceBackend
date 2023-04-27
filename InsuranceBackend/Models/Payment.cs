@@ -10,7 +10,7 @@ public partial class Payment
 
     public int ClientPolicyId { get; set; }
 
-    public int TransactionId { get; set; }
+    public string? TransactionId { get; set; }
 
     public string Time { get; set; } = null!;
 

@@ -138,14 +138,14 @@ namespace InsuranceBackend.Controllers
         }
 
         [HttpPost]
-        [Route("Payment")]
+        [Route("makePayment")]
 
         public IActionResult MakePayment() 
         {
             Payment payment = new()
             {
                 ClientPolicyId = int.Parse(Request.Form["clientPolicyId"]),
-                TransactionId = int.Parse(Request.Form["transactionId"]),
+                TransactionId = Request.Form["transactionId"],
                 Time = Request.Form["time"],
                 Amount = int.Parse(Request.Form["amount"]),
                 Status = Enum.PaymentStatusEnum.Processing

@@ -152,13 +152,22 @@ namespace InsuranceBackend.Services
 
         public Payment MakePayment(Payment payment)
         {
-            if (_context.ClientPolicies.First(cp => cp.ClientPolicyId == payment.ClientPolicyId) != null)
-            {
-                _context.Payments.Add(payment);
-                _context.SaveChanges();
-                return _context.Payments.OrderBy(p => p.PaymentId).Last();
-            }
-            return new Payment();
+            var dbcp = _context.ClientPolicies.First(cp => cp.ClientPolicyId == payment.ClientPolicyId);
+            var dbpt = _context.PolicyTerms.First(pt => pt.PolicyTermId == dbcp.PolicyTermId);
+            var dbp = _context.Policies.First(p => p.PolicyId == dbpt.PolicyId);
+            var dbc = _context.Companies.First(c => c.CompanyId == dbp.CompanyId);
+            var dbac = _context.AgentCompanies.First(ac=>ac.CompanyId == dbp.CompanyId);
+            var dba = _context.Agents.First(a=>a.AgentId == dbcp.AgentId);
+            if (dbcp.Counter == 0 || dbcp.Status != ClientPolicyStatusEnum.Active || dbp.Status != StatusEnum.Active || dbc.Status != ActorStatusEnum.Approved || dba.Status != ActorStatusEnum.Approved)
+                payment.Status = PaymentStatusEnum.Unsuccessful;
+            else { 
+                    payment.Status = PaymentStatusEnum.Successfull;
+                    dbcp.Counter -= 1;
+                    _context.ClientPolicies.Update(dbcp);
+                  }
+            _context.Payments.Add(payment);
+            _context.SaveChanges();
+            return _context.Payments.OrderBy(p => p.PaymentId).Last();
         }
         
         public AgentCompany ValidateReferral(string referral)

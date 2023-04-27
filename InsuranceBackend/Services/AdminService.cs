@@ -35,8 +35,9 @@ namespace InsuranceBackend.Services
         public void ChangeUserStatus(User user)
         {   
             _context.Users.Update(user);
+            ChangeActorStatus(user.UserId, user.Type, user.Status);
             _context.SaveChanges();
-            ChangeActorStatus(user.UserId,user.Type,user.Status);
+            
         }
 
         public void ChangeActorStatus(int userId,UserTypeEnum type,StatusEnum status)
@@ -59,7 +60,7 @@ namespace InsuranceBackend.Services
                         var dbagent = _context.Agents.First(c => c.UserId == userId);
                         if (dbagent != null)
                         {
-                            dbagent.Status = (ActorStatusEnum)(userId);
+                            dbagent.Status = (ActorStatusEnum)status;
                             _context.Agents.Update(dbagent);
                             _context.SaveChanges();
                         }
@@ -70,7 +71,7 @@ namespace InsuranceBackend.Services
                         var dbclient = _context.Clients.First(c => c.UserId == userId);
                         if (dbclient != null)
                         {
-                            dbclient.Status = (ActorStatusEnum)(status);
+                            dbclient.Status = (ActorStatusEnum)status;
                             _context.Clients.Update(dbclient);
                             _context.SaveChanges();
                         }
