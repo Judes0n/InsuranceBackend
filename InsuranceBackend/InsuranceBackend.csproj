@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <Compile Remove="Models\backup\**" />
+    <Compile Remove="NewFolder\**" />
     <Content Remove="Models\backup\**" />
+    <Content Remove="NewFolder\**" />
     <EmbeddedResource Remove="Models\backup\**" />
+    <EmbeddedResource Remove="NewFolder\**" />
     <None Remove="Models\backup\**" />
+    <None Remove="NewFolder\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="NewFolder\" />
     <Folder Include="Resources\Images\Companies\" />
     <Folder Include="Resources\Images\Agents\" />
     <Folder Include="Resources\Images\Clients\" />
