@@ -57,6 +57,14 @@ namespace Insurance.Controllers
         }
 
         [HttpGet]
+        [Route("GetAgentforClient")]
+
+        public IActionResult GetAgentforClient(int agentId) 
+        {
+            return Ok(_dbContext.Agents.First(a => a.AgentId == agentId));  
+        }
+
+        [HttpGet]
         [Route("GetPolicy")]
 
         public IActionResult GetPolicy(int policyId) 

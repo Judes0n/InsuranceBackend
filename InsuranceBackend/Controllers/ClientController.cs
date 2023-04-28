@@ -26,6 +26,7 @@ namespace InsuranceBackend.Controllers
            var dbclient  = _clientService.GetClient(clientId);
             return Ok(dbclient);
         }
+        
 
         [HttpGet]
         [Route("GetClientById")]
@@ -193,6 +194,14 @@ namespace InsuranceBackend.Controllers
         public IEnumerable <Maturity> GetMaturities(int clientId)
         {
             return _clientService.GetMaturities(clientId);
+        }
+
+        [HttpGet]
+        [Route("GetPolicyterm")]
+
+        public IEnumerable<PolicyTerm> GetPterms(int policytermId)
+        {
+            return _clientService.GetPterms(policytermId);
         }
     }
 }

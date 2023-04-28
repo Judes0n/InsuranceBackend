@@ -9,12 +9,16 @@
   <ItemGroup>
     <Compile Remove="Models\backup\**" />
     <Compile Remove="NewFolder\**" />
+    <Compile Remove="Resources\Images\Policies\**" />
     <Content Remove="Models\backup\**" />
     <Content Remove="NewFolder\**" />
+    <Content Remove="Resources\Images\Policies\**" />
     <EmbeddedResource Remove="Models\backup\**" />
     <EmbeddedResource Remove="NewFolder\**" />
+    <EmbeddedResource Remove="Resources\Images\Policies\**" />
     <None Remove="Models\backup\**" />
     <None Remove="NewFolder\**" />
+    <None Remove="Resources\Images\Policies\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -37,7 +41,6 @@
     <Folder Include="Resources\Images\Companies\" />
     <Folder Include="Resources\Images\Agents\" />
     <Folder Include="Resources\Images\Clients\" />
-    <Folder Include="Resources\Images\Policies\" />
   </ItemGroup>
 
 </Project>

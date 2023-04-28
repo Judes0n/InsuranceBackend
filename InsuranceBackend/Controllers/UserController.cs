@@ -266,6 +266,20 @@ namespace Insurance.Controllers
             _dbContext.SaveChanges();
             return Ok(feedback);
         }
+
+        [HttpGet]
+        [Route("Images/{*loc}")]
+
+        public IActionResult GetImage([FromRoute] string loc)
+        {
+            if (!System.IO.File.Exists(loc))
+            {
+                return NotFound(); // Return a 404 Not Found response if the file doesn't exist
+            }
+            var fileContent = System.IO.File.ReadAllBytes(loc);
+            var contentTypes = new[] { "image/jpeg", "image/png" ,"image/jpg" };
+            return File(fileContent,"image/jpg");
+        }
     }
 
 }

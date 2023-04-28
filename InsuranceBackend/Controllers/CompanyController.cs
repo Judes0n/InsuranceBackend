@@ -1,11 +1,7 @@
 ﻿using InsuranceBackend.Enum;
 using InsuranceBackend.Models;
 using InsuranceBackend.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
-using System.Text.Json.Serialization;
 
 namespace InsuranceBackend.Controllers
 {
@@ -22,6 +18,8 @@ namespace InsuranceBackend.Controllers
             _userService = new UserService();
             _dbContext = new();
         }
+
+
 
         [HttpGet]
         [Route("GetPolicy")]
