@@ -209,8 +209,9 @@ namespace Insurance.Controllers
             Premium premium = new()
             {
                 ClientPolicyId = int.Parse(Request.Form["clientPolicyId"]),
-                DateOfCollection = Request.Form["dateOfCollection"],
-                Penalty = int.Parse(Request.Form["penality"])
+                DateOfPenalty = Request.Form["dateOfPenalty"],
+                Penalty = int.Parse(Request.Form["penalty"]),
+                Status = PenaltyStatusEnum.Pending
             };
             return Ok(_agentServices.AddPenalty(premium));
         }

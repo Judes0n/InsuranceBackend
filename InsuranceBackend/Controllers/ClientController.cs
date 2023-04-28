@@ -1,4 +1,5 @@
-﻿using InsuranceBackend.Models;
+﻿
+using InsuranceBackend.Models;
 using InsuranceBackend.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -151,7 +152,10 @@ namespace InsuranceBackend.Controllers
                 Amount = int.Parse(Request.Form["amount"]),
                 Status = Enum.PaymentStatusEnum.Processing
             };
-            return Ok(_clientService.MakePayment(payment));
+            if ( int.Parse(Request.Form["penalty"]) == 0)
+                return Ok(_clientService.MakePayment(payment,0));
+            else
+                return Ok(_clientService.MakePayment(payment,1));
         }
 
         [HttpGet]
@@ -202,6 +206,14 @@ namespace InsuranceBackend.Controllers
         public IEnumerable<PolicyTerm> GetPterms(int policytermId)
         {
             return _clientService.GetPterms(policytermId);
+        }
+
+        [HttpGet]
+        [Route("GetPenalties")]
+        
+        public IEnumerable<Premium> GetPenalties(int clientPolicyId)
+        {
+           return _clientService.ViewPenalties(clientPolicyId);
         }
     }
 }

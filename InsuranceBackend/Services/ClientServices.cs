@@ -150,7 +150,7 @@ namespace InsuranceBackend.Services
         }
 
 
-        public Payment MakePayment(Payment payment)
+        public Payment MakePayment(Payment payment,int penalty)
         {
             var dbcp = _context.ClientPolicies.First(cp => cp.ClientPolicyId == payment.ClientPolicyId);
             var dbpt = _context.PolicyTerms.First(pt => pt.PolicyTermId == dbcp.PolicyTermId);
@@ -158,12 +158,26 @@ namespace InsuranceBackend.Services
             var dbc = _context.Companies.First(c => c.CompanyId == dbp.CompanyId);
             var dbac = _context.AgentCompanies.First(ac=>ac.CompanyId == dbp.CompanyId);
             var dba = _context.Agents.First(a=>a.AgentId == dbcp.AgentId);
+            Premium dbpen = new();
+            if (penalty != 0)
+                dbpen = _context.Premia.First(pen=>pen.ClientPolicyId==payment.ClientPolicyId && pen.Status == PenaltyStatusEnum.Pending);
+
             if (dbcp.Counter == 0 || dbcp.Status != ClientPolicyStatusEnum.Active || dbp.Status != StatusEnum.Active || dbc.Status != ActorStatusEnum.Approved || dba.Status != ActorStatusEnum.Approved)
                 payment.Status = PaymentStatusEnum.Unsuccessful;
-            else { 
+            else {
+                if (dbpen != null)
+                {
+                    payment.Status = PaymentStatusEnum.Successfull;
+                    dbpen.Status = PenaltyStatusEnum.Paid;
+                    _context.Premia.Update(dbpen);
+
+                }
+                else
+                {
                     payment.Status = PaymentStatusEnum.Successfull;
                     dbcp.Counter -= 1;
                     _context.ClientPolicies.Update(dbcp);
+                }
                   }
             _context.Payments.Add(payment);
             _context.SaveChanges();
@@ -265,11 +279,9 @@ namespace InsuranceBackend.Services
             return maturities;
         }
 
-        public IEnumerable<Premium> ViewPremia(int clientID)
+        public IEnumerable<Premium> ViewPenalties(int clientpolicyId)
         {
-            IEnumerable<Premium> premia=new List<Premium>();
-            premia = _context.Premia.Include(m => m.ClientPolicyId).Where(m => m.ClientPolicy.ClientId == clientID).ToList();
-            return premia;
+            return _context.Premia.Where(p=>p.ClientPolicyId == clientpolicyId).ToList();
         }
 
         public List<ClientDeath> ViewClientDeath(int clientID)

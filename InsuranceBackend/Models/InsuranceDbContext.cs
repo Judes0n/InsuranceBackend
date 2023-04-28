@@ -93,7 +93,7 @@ public partial class InsuranceDbContext : DbContext
 
         modelBuilder.Entity<AgentCompany>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AgentCom__3213E83F18A5D027");
+            entity.HasKey(e => e.Id).HasName("PK__AgentCom__3213E83F2F4875D2");
 
             entity.ToTable("AgentCompany");
 
@@ -193,6 +193,10 @@ public partial class InsuranceDbContext : DbContext
                 .HasColumnName("expDate");
             entity.Property(e => e.NomineeId).HasColumnName("nomineeID");
             entity.Property(e => e.PolicyTermId).HasColumnName("policyTermID");
+            entity.Property(e => e.Referral)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("referral");
             entity.Property(e => e.StartDate)
                 .HasMaxLength(20)
                 .IsUnicode(false)
@@ -326,7 +330,10 @@ public partial class InsuranceDbContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("time");
-            entity.Property(e => e.TransactionId).HasColumnName("transactionID");
+            entity.Property(e => e.TransactionId)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("transactionID");
 
             entity.HasOne(d => d.ClientPolicy).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.ClientPolicyId)
@@ -395,13 +402,14 @@ public partial class InsuranceDbContext : DbContext
 
             entity.Property(e => e.PremiumId).HasColumnName("premiumID");
             entity.Property(e => e.ClientPolicyId).HasColumnName("clientPolicyID");
-            entity.Property(e => e.DateOfCollection)
+            entity.Property(e => e.DateOfPenalty)
                 .HasMaxLength(20)
                 .IsUnicode(false)
-                .HasColumnName("dateOfCollection");
+                .HasColumnName("dateOfPenalty");
             entity.Property(e => e.Penalty)
                 .HasColumnType("money")
                 .HasColumnName("penalty");
+            entity.Property(e => e.Status).HasColumnName("status");
 
             entity.HasOne(d => d.ClientPolicy).WithMany(p => p.Premia)
                 .HasForeignKey(d => d.ClientPolicyId)

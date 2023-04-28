@@ -130,11 +130,8 @@ namespace InsuranceBackend.Services
             ValidateClientPolicy(premium.ClientPolicyId);
             _context.Premia.Add(premium);
             ClientPolicy? clientPolicy = _context.ClientPolicies.FirstOrDefault(p => p.ClientPolicyId == premium.ClientPolicyId);
-            if (clientPolicy != null)
-            {
-                clientPolicy.Counter += 2;
-                _context.ClientPolicies.Update(clientPolicy);
-            }
+            if (clientPolicy != null)            
+              premium.Status = PenaltyStatusEnum.Pending;           
             _context.SaveChanges();
             return _context.Premia.OrderBy(p=>p.PremiumId).Last();
         }
