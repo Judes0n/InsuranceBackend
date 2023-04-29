@@ -1,13 +1,12 @@
 ﻿using InsuranceBackend.Models;
 using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using System.Text;
+using InsuranceBackend.Database;
 
 namespace InsuranceBackend.Services
 {
     public class UserService
-    {
-        InsuranceDbContext _context;
+    {   
+        private InsuranceDbContext _context;
 
         public UserService()
         {
@@ -28,10 +27,7 @@ namespace InsuranceBackend.Services
 
         public User AddUser(User user)
         {
-            //user.UserId = -1;
-            var con = new SqlConnection(
-                "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
-            );
+            var con = new SqlConnection(DBConnection.ConnectionString);
             con.Open();
             var cmd = new SqlCommand(
                 "INSERT INTO Users(userName,password,type,status) VALUES('"
@@ -45,8 +41,6 @@ namespace InsuranceBackend.Services
             );
             cmd.ExecuteNonQuery();
             con.Close();
-            //_context.Users.Add(user);
-            //_context.SaveChanges();
             return user;
         }
 

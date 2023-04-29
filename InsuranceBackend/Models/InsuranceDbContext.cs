@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using InsuranceBackend.Database;
 
 namespace InsuranceBackend.Models;
 
@@ -43,7 +44,7 @@ public partial class InsuranceDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) =>
         optionsBuilder.UseSqlServer(
-            "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
+            DBConnection.ConnectionString
         );
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
