@@ -46,14 +46,9 @@ namespace InsuranceBackend.Services
             return GetCompanyByName(company.CompanyName);
         }
 
-        public Company GetCompany(int userID)
+        public Company? GetCompany(int userID)
         {
-            var res = _context.Companies.FirstOrDefault(c => c.UserId == userID);
-            if (res == null)
-            {
-                return res = new Company();
-            }
-            return res;
+           return _context.Companies.FirstOrDefault(c => c.UserId == userID);           
         }
 
         public Company GetCompanyByName(string companyName)

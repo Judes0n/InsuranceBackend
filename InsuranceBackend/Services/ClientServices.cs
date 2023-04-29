@@ -22,11 +22,9 @@ namespace InsuranceBackend.Services
             return res ?? throw new Exception();
         }
 
-        public Client GetClientById(int userId)
+        public Client? GetClientById(int userId)
         {
-            Client client =
-                _context.Clients.FirstOrDefault(c => c.UserId == userId) ?? throw new Exception();
-            return client;
+           return _context.Clients.FirstOrDefault(c => c.UserId == userId);
         }
 
         public Client GetClientByName(string userName)
@@ -63,9 +61,7 @@ namespace InsuranceBackend.Services
             {
                 throw new Exception(null);
             }
-            var con = new SqlConnection(
-                DBConnection.ConnectionString
-            );
+            var con = new SqlConnection(DBConnection.ConnectionString);
             con.Open();
             var cmd = new SqlCommand(
                 "INSERT INTO Clients(userID,clientName,gender,dob,address,profilePic,phoneNum,email,status) VALUES('"

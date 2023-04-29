@@ -40,24 +40,17 @@ namespace Insurance.Controllers
         {
             User user =
                 new()
-                {
-                    UserId = int.Parse(Request.Form["UserId"]),
+                {                   
                     UserName = Request.Form["UserName"],
                     Password = Request.Form["Password"],
-                    Type = (UserTypeEnum)
-                        Enum.Parse(typeof(UserTypeEnum), Request.Form["Type"].ToString()),
+                    Type = (UserTypeEnum)Enum.Parse(typeof(UserTypeEnum), Request.Form["Type"]),
                     Status = StatusEnum.Inactive,
                 };
             var logUser = _userService.GetUserByName(userName: user.UserName);
             if (logUser == null)
             {
                 var file = Request.Form.Files[0];
-                string email = Request.Form["email"].ToString();
-                string gender = "";
-                if (user.Type != UserTypeEnum.Company)
-                {
-                    gender = Request.Form["gender"].ToString();
-                }
+
                 var folderName = Path.Combine("Resources", "Images", "Clients");
                 switch (user.Type)
                 {
@@ -102,18 +95,18 @@ namespace Insurance.Controllers
                                 {
                                     //client.ClientId = -1;
                                     client.UserId = dbuser.UserId;
-                                    client.Address = "Address";
-                                    client.ClientName = dbuser.UserName;
-                                    client.Gender = gender;
-                                    client.Dob = "Date of Birth";
+                                    client.Address = Request.Form["address"];
+                                    client.ClientName = Request.Form["clientName"];
+                                    client.Gender = Request.Form["gender"];
+                                    client.Dob = Request.Form["dob"];
                                     client.ProfilePic = dbPath;
-                                    client.PhoneNum = "0000000000";
-                                    client.Email = email;
+                                    client.PhoneNum = Request.Form["phoneNum"];
+                                    client.Email = Request.Form["email"];
                                     client.Status = (int)ActorStatusEnum.Unapproved;
                                     //client.User = dbuser;
                                     _clientService.AddClient(client);
                                 }
-                                break;
+                                return Ok(_dbContext.Clients.OrderBy(c => c.ClientId).Last());
                             }
                             case UserTypeEnum.Agent:
                             {
@@ -123,18 +116,18 @@ namespace Insurance.Controllers
                                 {
                                     agent.UserId = dbagent.UserId;
                                     agent.AgentName = dbagent.UserName;
-                                    agent.Gender = gender;
-                                    agent.PhoneNum = "0000000000";
-                                    agent.Dob = "Date of Birth";
-                                    agent.Email = email;
-                                    agent.Address = "Address";
+                                    agent.Gender = Request.Form["gender"];
+                                    agent.PhoneNum = Request.Form["phoneNum"];
+                                    agent.Dob = Request.Form["dob"];
+                                    agent.Email = Request.Form["email"];
+                                    agent.Address = Request.Form["address"];
                                     agent.Grade = 0;
                                     agent.ProfilePic = dbPath;
                                     agent.Status = (int)ActorStatusEnum.Unapproved;
                                     _agentService.AddAgent(agent);
                                 }
 
-                                break;
+                                return Ok(_dbContext.Agents.OrderBy(a=>a.AgentId).Last());
                             }
                             case UserTypeEnum.Company:
                             {
@@ -144,17 +137,16 @@ namespace Insurance.Controllers
                                 {
                                     company.UserId = dbcompany.UserId;
                                     company.CompanyName = dbcompany.UserName;
-                                    company.Address = "Address";
-                                    company.Email = email;
-                                    company.PhoneNum = "0000000000";
+                                    company.Address = Request.Form["address"];
+                                    company.Email = Request.Form["email"];
+                                    company.PhoneNum = Request.Form["phoneNum"];
                                     company.ProfilePic = dbPath;
                                     company.Status = ActorStatusEnum.Unapproved;
                                     _companyService.AddCompany(company);
                                 }
-                                break;
+                               return Ok(_dbContext.Companies.OrderBy(c=>c.CompanyId).Last());
                             }
                         }
-                        return Ok(user);
                     }
                 }
                 catch (Exception ex)
@@ -165,7 +157,7 @@ namespace Insurance.Controllers
             }
             else if (logUser.UserName == user.UserName)
             {
-                return BadRequest();
+                return BadRequest(new User() { UserId = -1 });
             }
             return BadRequest();
         }
