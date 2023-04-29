@@ -43,5 +43,18 @@ namespace InsuranceBackend.Services
             _context.Users.Remove(user);
             _context.SaveChanges();
         }
+
+        public User UpdateUser(User user)
+        {
+            var dbuser = _context.Users.FirstOrDefault(u => u.UserId == user.UserId);
+           if (dbuser!= null)
+            {
+                dbuser.UserName = user.UserName;
+                dbuser.Password = user.Password;
+                _context.Users.Update(dbuser);
+                _context.SaveChanges();
+            }
+           return new() { UserId = 0};
+        }
     }
 }

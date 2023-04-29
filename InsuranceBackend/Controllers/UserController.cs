@@ -16,7 +16,6 @@ namespace Insurance.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-
     public class UserController : ControllerBase
     {
         readonly ClientServices _clientService;
@@ -24,6 +23,7 @@ namespace Insurance.Controllers
         readonly CompanyService _companyService;
         readonly AgentService _agentService;
         readonly InsuranceDbContext _dbContext;
+
         public UserController()
         {
             _clientService = new ClientServices();
@@ -38,14 +38,16 @@ namespace Insurance.Controllers
         [Route("Register")]
         public IActionResult Register()
         {
-            User user = new()
-            {
-                UserId = int.Parse(Request.Form["UserId"]),
-                UserName = Request.Form["UserName"],
-                Password = Request.Form["Password"],
-                Type = (UserTypeEnum)Enum.Parse(typeof(UserTypeEnum), Request.Form["Type"].ToString()),
-                Status = StatusEnum.Inactive,
-            };
+            User user =
+                new()
+                {
+                    UserId = int.Parse(Request.Form["UserId"]),
+                    UserName = Request.Form["UserName"],
+                    Password = Request.Form["Password"],
+                    Type = (UserTypeEnum)
+                        Enum.Parse(typeof(UserTypeEnum), Request.Form["Type"].ToString()),
+                    Status = StatusEnum.Inactive,
+                };
             var logUser = _userService.GetUserByName(userName: user.UserName);
             if (logUser == null)
             {
@@ -60,24 +62,27 @@ namespace Insurance.Controllers
                 switch (user.Type)
                 {
                     case UserTypeEnum.Company:
-                        {
-                            folderName = Path.Combine("Resources", "Images", "Companies");
-                            break;
-                        }
+                    {
+                        folderName = Path.Combine("Resources", "Images", "Companies");
+                        break;
+                    }
                     case UserTypeEnum.Agent:
-                        {
-                            folderName = Path.Combine("Resources", "Images", "Agents");
-                            break;
-                        }
+                    {
+                        folderName = Path.Combine("Resources", "Images", "Agents");
+                        break;
+                    }
                     case UserTypeEnum.Client:
-                        {
-                            folderName = Path.Combine("Resources", "Images", "Clients");
-                            break;
-                        }
+                    {
+                        folderName = Path.Combine("Resources", "Images", "Clients");
+                        break;
+                    }
                 }
 
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
-                var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim().ToString();
+                var fileName = ContentDispositionHeaderValue
+                    .Parse(file.ContentDisposition)
+                    .FileName.Trim()
+                    .ToString();
                 var fullPath = Path.Combine(pathToSave, fileName);
                 var dbPath = Path.Combine(folderName, fileName);
                 using var stream = new FileStream(fullPath, FileMode.Create);
@@ -90,64 +95,64 @@ namespace Insurance.Controllers
                         switch (user.Type)
                         {
                             case UserTypeEnum.Client:
+                            {
+                                Client client = new();
+                                var dbuser = _userService.GetUserByName(user.UserName);
+                                if (dbuser != null)
                                 {
-                                    Client client = new();
-                                    var dbuser = _userService.GetUserByName(user.UserName);
-                                    if (dbuser != null)
-                                    {
-                                        //client.ClientId = -1;
-                                        client.UserId = dbuser.UserId;
-                                        client.Address = "Address";
-                                        client.ClientName = dbuser.UserName;
-                                        client.Gender = gender;
-                                        client.Dob = "Date of Birth";
-                                        client.ProfilePic = dbPath;
-                                        client.PhoneNum = "0000000000";
-                                        client.Email = email;
-                                        client.Status = (int)ActorStatusEnum.Unapproved;
-                                        //client.User = dbuser;
-                                        _clientService.AddClient(client);
-                                    }
-                                    break;
+                                    //client.ClientId = -1;
+                                    client.UserId = dbuser.UserId;
+                                    client.Address = "Address";
+                                    client.ClientName = dbuser.UserName;
+                                    client.Gender = gender;
+                                    client.Dob = "Date of Birth";
+                                    client.ProfilePic = dbPath;
+                                    client.PhoneNum = "0000000000";
+                                    client.Email = email;
+                                    client.Status = (int)ActorStatusEnum.Unapproved;
+                                    //client.User = dbuser;
+                                    _clientService.AddClient(client);
                                 }
+                                break;
+                            }
                             case UserTypeEnum.Agent:
+                            {
+                                Agent agent = new();
+                                var dbagent = _userService.GetUserByName(user.UserName);
+                                if (dbagent != null)
                                 {
-                                    Agent agent = new();
-                                    var dbagent = _userService.GetUserByName(user.UserName);
-                                    if (dbagent != null)
-                                    {
-                                        agent.UserId = dbagent.UserId;
-                                        agent.AgentName = dbagent.UserName;
-                                        agent.Gender = gender;
-                                        agent.PhoneNum = "0000000000";
-                                        agent.Dob = "Date of Birth";
-                                        agent.Email = email;
-                                        agent.Address = "Address";
-                                        agent.Grade = 0;
-                                        agent.ProfilePic = dbPath;
-                                        agent.Status = (int)ActorStatusEnum.Unapproved;
-                                        _agentService.AddAgent(agent);
-                                    }
+                                    agent.UserId = dbagent.UserId;
+                                    agent.AgentName = dbagent.UserName;
+                                    agent.Gender = gender;
+                                    agent.PhoneNum = "0000000000";
+                                    agent.Dob = "Date of Birth";
+                                    agent.Email = email;
+                                    agent.Address = "Address";
+                                    agent.Grade = 0;
+                                    agent.ProfilePic = dbPath;
+                                    agent.Status = (int)ActorStatusEnum.Unapproved;
+                                    _agentService.AddAgent(agent);
+                                }
 
-                                    break;
-                                }
+                                break;
+                            }
                             case UserTypeEnum.Company:
+                            {
+                                Company company = new();
+                                var dbcompany = _userService.GetUserByName(user.UserName);
+                                if (dbcompany != null)
                                 {
-                                    Company company = new();
-                                    var dbcompany = _userService.GetUserByName(user.UserName);
-                                    if (dbcompany != null)
-                                    {
-                                        company.UserId = dbcompany.UserId;
-                                        company.CompanyName = dbcompany.UserName;
-                                        company.Address = "Address";
-                                        company.Email = email;
-                                        company.PhoneNum = "0000000000";
-                                        company.ProfilePic = dbPath;
-                                        company.Status = ActorStatusEnum.Unapproved;
-                                        _companyService.AddCompany(company);
-                                    }
-                                    break;
+                                    company.UserId = dbcompany.UserId;
+                                    company.CompanyName = dbcompany.UserName;
+                                    company.Address = "Address";
+                                    company.Email = email;
+                                    company.PhoneNum = "0000000000";
+                                    company.ProfilePic = dbPath;
+                                    company.Status = ActorStatusEnum.Unapproved;
+                                    _companyService.AddCompany(company);
                                 }
+                                break;
+                            }
                         }
                         return Ok(user);
                     }
@@ -157,7 +162,6 @@ namespace Insurance.Controllers
                     return BadRequest(ex.Message);
                 }
                 return BadRequest();
-
             }
             else if (logUser.UserName == user.UserName)
             {
@@ -168,7 +172,6 @@ namespace Insurance.Controllers
 
         [HttpPost]
         [Route("Login")]
-
         public IActionResult Login([FromBody] User user)
         {
             var logUser = _userService.GetUserByName(user.UserName);
@@ -182,7 +185,6 @@ namespace Insurance.Controllers
                     return BadRequest();
             }
             return BadRequest();
-
         }
 
         [HttpGet]
@@ -194,7 +196,6 @@ namespace Insurance.Controllers
 
         [HttpPost]
         [Route("Uploads")]
-
         public IActionResult Upload()
         {
             try
@@ -205,25 +206,29 @@ namespace Insurance.Controllers
                 switch (type)
                 {
                     case 1:
-                        {
-                            folderName = Path.Combine("Resources", "Images", "Companies");
-                            break;
-                        }
+                    {
+                        folderName = Path.Combine("Resources", "Images", "Companies");
+                        break;
+                    }
                     case 2:
-                        { folderName = Path.Combine("Resources", "Images", "Agents");
-                            break;
-                        }
+                    {
+                        folderName = Path.Combine("Resources", "Images", "Agents");
+                        break;
+                    }
                     case 3:
-                        {
-                            folderName = Path.Combine("Resources", "Images", "Clients");
-                            break;
-                        }
+                    {
+                        folderName = Path.Combine("Resources", "Images", "Clients");
+                        break;
+                    }
                 }
 
                 var pathToSave = Path.Combine(Directory.GetCurrentDirectory(), folderName);
                 if (file.Length > 0)
                 {
-                    var fileName = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim().ToString();
+                    var fileName = ContentDispositionHeaderValue
+                        .Parse(file.ContentDisposition)
+                        .FileName.Trim()
+                        .ToString();
                     var fullPath = Path.Combine(pathToSave, fileName);
                     var dbPath = Path.Combine(folderName, fileName);
                     using var stream = new FileStream(fullPath, FileMode.Create);
@@ -243,15 +248,14 @@ namespace Insurance.Controllers
 
         [HttpGet]
         [Route("GetUserByName")]
-
         public IActionResult GetUserByName(string username)
         {
-            return Ok(_userService.GetUserByName(username)) ?? throw new Exception("Username not Found");
+            return Ok(_userService.GetUserByName(username))
+                ?? throw new Exception("Username not Found");
         }
 
         [HttpGet]
         [Route("GetUser")]
-
         public IActionResult GetUser(int userId)
         {
             return Ok(_userService.GetUser(userId)) ?? throw new Exception("Username not Found");
@@ -259,9 +263,8 @@ namespace Insurance.Controllers
 
         [HttpPost]
         [Route("Feed")]
-
         public IActionResult FeedPost(Feedback feedback)
-        { 
+        {
             _dbContext.Feedbacks.Add(feedback);
             _dbContext.SaveChanges();
             return Ok(feedback);
@@ -269,7 +272,6 @@ namespace Insurance.Controllers
 
         [HttpGet]
         [Route("Images/{*loc}")]
-
         public IActionResult GetImage([FromRoute] string loc)
         {
             if (!System.IO.File.Exists(loc))
@@ -277,9 +279,24 @@ namespace Insurance.Controllers
                 return NotFound(); // Return a 404 Not Found response if the file doesn't exist
             }
             var fileContent = System.IO.File.ReadAllBytes(loc);
-            var contentTypes = new[] { "image/jpeg", "image/png" ,"image/jpg" };
-            return File(fileContent,"image/jpg");
+            var contentTypes = new[] { "image/jpeg", "image/png", "image/jpg" };
+            return File(fileContent, "image/jpg");
+        }
+
+        [HttpPut]
+        [Route("UpdateUser")]
+        public IActionResult UpdateUser()
+        {
+            User dbuser =
+                new()
+                {
+                    UserName = Request.Form["userName"],
+                    Password = Request.Form["password"],
+                    UserId = int.Parse(Request.Form["userId"]),
+                    Status = (StatusEnum)int.Parse(Request.Form["status"]),
+                    Type = (UserTypeEnum)int.Parse(Request.Form["type"])
+                };
+            return Ok(_userService.UpdateUser(dbuser));
         }
     }
-
 }
