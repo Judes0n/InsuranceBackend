@@ -9,9 +9,10 @@ namespace InsuranceBackend.Controllers
     [ApiController]
     public class CompanyController : ControllerBase
     {
-       readonly CompanyService _companyService;
-       readonly UserService _userService;
-       readonly InsuranceDbContext _dbContext;
+        readonly CompanyService _companyService;
+        readonly UserService _userService;
+        readonly InsuranceDbContext _dbContext;
+
         public CompanyController()
         {
             _companyService = new CompanyService();
@@ -19,20 +20,16 @@ namespace InsuranceBackend.Controllers
             _dbContext = new();
         }
 
-
-
         [HttpGet]
         [Route("GetPolicy")]
-
         public IActionResult GetPolicy(int policyId)
         {
-           Policy policy = _companyService.GetPolicy(policyId);
+            Policy policy = _companyService.GetPolicy(policyId);
             return Ok(policy);
         }
 
         [HttpPost]
         [Route("AddPolicy")]
-
         public IActionResult AddPolicy()
         {
             Policy policy = new();
@@ -44,8 +41,7 @@ namespace InsuranceBackend.Controllers
             policy.PolicyAmount = int.Parse(Request.Form["policyAmount"]);
             policy.TimePeriod = int.Parse(Request.Form["timePeriod"]);
             policy.Status = (int)StatusEnum.Inactive;
-          
-           
+
             if (policy == null)
                 throw new ArgumentNullException(nameof(policy));
 
@@ -57,13 +53,14 @@ namespace InsuranceBackend.Controllers
         [Route("AddPolicyTerm")]
         public IActionResult AddPolicyTerm()
         {
-            PolicyTerm policyterm = new()
-            {
-                PolicyId = int.Parse(Request.Form["policyId"]),
-                Terms = int.Parse(Request.Form["terms"]),
-                PremiumAmount = int.Parse(Request.Form["premiumAmount"]),
-                Period = int.Parse(Request.Form["period"])
-            };
+            PolicyTerm policyterm =
+                new()
+                {
+                    PolicyId = int.Parse(Request.Form["policyId"]),
+                    Terms = int.Parse(Request.Form["terms"]),
+                    PremiumAmount = int.Parse(Request.Form["premiumAmount"]),
+                    Period = int.Parse(Request.Form["period"])
+                };
 
             if (policyterm == null)
                 throw new ArgumentNullException(nameof(policyterm));
@@ -73,15 +70,13 @@ namespace InsuranceBackend.Controllers
 
         [HttpGet]
         [Route("ViewPolicies")]
-
         public IEnumerable<Policy> ViewPolicies(int companyID)
         {
-           return _companyService.ViewPolicies(companyID);
+            return _companyService.ViewPolicies(companyID);
         }
 
         [HttpGet]
         [Route("ViewAgents")]
-
         public IEnumerable<AgentCompany> ViewAgents(int companyId)
         {
             return _companyService.ViewAgents(companyId);
@@ -89,16 +84,13 @@ namespace InsuranceBackend.Controllers
 
         [HttpGet]
         [Route("GetCompany")]
-
-        public Company GetCompany(int userID) 
-        { 
+        public Company GetCompany(int userID)
+        {
             return _companyService.GetCompany(userID);
         }
 
-
         [HttpGet]
         [Route("GetAllCompany")]
-
         public IEnumerable<Company> GetAll()
         {
             return _companyService.GetAllCompanies();
@@ -106,14 +98,13 @@ namespace InsuranceBackend.Controllers
 
         [HttpPost]
         [Route("ChangeAgentCompanyStatus")]
-
         public IActionResult Change()
         {
             int id = int.Parse(Request.Form["id"]);
             int status = int.Parse(Request.Form["status"]);
             AgentCompany agentCompany = new();
             agentCompany = _dbContext.AgentCompanies.First(ac => ac.Id == id);
-            agentCompany.Status =(StatusEnum)status;
+            agentCompany.Status = (StatusEnum)status;
             if (status == 0)
             {
                 _dbContext.AgentCompanies.Update(agentCompany);
@@ -131,23 +122,20 @@ namespace InsuranceBackend.Controllers
 
         [HttpPut]
         [Route("ChangePolicyStatus")]
-
         public IActionResult PStatusChange()
         {
             int cpid = int.Parse(Request.Form["policyId"]);
-            StatusEnum status = (StatusEnum)int.Parse(Request.Form["status"]); 
+            StatusEnum status = (StatusEnum)int.Parse(Request.Form["status"]);
             var dbpolicy = _companyService.GetPolicy(cpid);
             dbpolicy.Status = status;
             return Ok(_companyService.UpdatePolicy(dbpolicy));
         }
 
-
         [HttpGet]
         [Route("GetAgentCompany")]
-        public IActionResult GetAgentCompany(int id) 
-        { 
-            return Ok(_dbContext.AgentCompanies.FirstOrDefault(ac=>ac.Id == id));
+        public IActionResult GetAgentCompany(int id)
+        {
+            return Ok(_dbContext.AgentCompanies.FirstOrDefault(ac => ac.Id == id));
         }
-    } 
+    }
 }
-

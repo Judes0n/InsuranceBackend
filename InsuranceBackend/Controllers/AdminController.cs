@@ -14,6 +14,7 @@ namespace InsuranceBackend.Controllers
         private readonly UserService _userService;
         private readonly AdminService _adminService;
         private readonly InsuranceDbContext _dbContext;
+
         public AdminController()
         {
             _userService = new();
@@ -23,7 +24,6 @@ namespace InsuranceBackend.Controllers
 
         [HttpPut]
         [Route("ChangeUserStatus")]
-
         public IActionResult ChangeStatus(User user)
         {
             _adminService.ChangeUserStatus(user);
@@ -32,22 +32,20 @@ namespace InsuranceBackend.Controllers
 
         [HttpPost]
         [Route("AddPolicyType")]
-
-        public IActionResult AddType(PolicyType policyType) 
-        { 
+        public IActionResult AddType(PolicyType policyType)
+        {
             return Ok(_adminService.AddPolicytype(policyType));
         }
 
         [HttpGet]
         [Route("GetAllTypes")]
-
         public IActionResult GetAllTypes()
         {
             return Ok(_dbContext.PolicyTypes.ToList());
         }
+
         [HttpGet]
         [Route("GetAllAgents")]
-
         public IActionResult GetAllAgent()
         {
             return Ok(_adminService.GetAllAgent());
@@ -55,7 +53,6 @@ namespace InsuranceBackend.Controllers
 
         [HttpGet]
         [Route("GetAllPolicies")]
-
         public IActionResult GetAll()
         {
             return Ok(_adminService.GetAllPolicies());
@@ -63,7 +60,6 @@ namespace InsuranceBackend.Controllers
 
         [HttpGet]
         [Route("GetAllMaturities")]
-
         public IActionResult GetAllMaturities()
         {
             return Ok(_dbContext.Maturities.ToList());
@@ -71,7 +67,6 @@ namespace InsuranceBackend.Controllers
 
         [HttpGet]
         [Route("GetFeedbacks")]
-
         public IActionResult GetFeeds()
         {
             return Ok(_dbContext.Feedbacks.ToList());
@@ -79,7 +74,6 @@ namespace InsuranceBackend.Controllers
 
         [HttpGet]
         [Route("GetPolicyTerms")]
-
         public IActionResult GetTerms(int policyId)
         {
             var res = _dbContext.PolicyTerms.Where(pt => pt.PolicyId == policyId).ToList();
@@ -88,7 +82,6 @@ namespace InsuranceBackend.Controllers
 
         [HttpPut]
         [Route("ChangePolicyStatus")]
-
         public IActionResult UpdatePolicy()
         {
             Policy policy = new Policy()
@@ -99,7 +92,7 @@ namespace InsuranceBackend.Controllers
                 PolicyName = Request.Form["policyName"],
                 TimePeriod = int.Parse(Request.Form["timePeriod"]),
                 PolicyAmount = int.Parse(Request.Form["policyAmount"]),
-                Status = (StatusEnum) int.Parse(Request.Form["status"])
+                Status = (StatusEnum)int.Parse(Request.Form["status"])
             };
 
             _adminService.ChangePolicyStatus(policy);
@@ -108,8 +101,7 @@ namespace InsuranceBackend.Controllers
 
         [HttpGet]
         [Route("GetPolicy")]
-
-        public IActionResult GetPolicy(int policyId) 
+        public IActionResult GetPolicy(int policyId)
         {
             return Ok(_dbContext.Policies.FirstOrDefault(p => p.PolicyId == policyId));
         }

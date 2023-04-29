@@ -14,17 +14,33 @@ namespace InsuranceBackend.Services
         {
             _context = new InsuranceDbContext();
         }
+
         public Company AddCompany(Company company)
         {
             try
             {
-                var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+                var con = new SqlConnection(
+                    "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
+                );
                 con.Open();
-                var cmd = new SqlCommand("INSERT INTO Companies(userID,companyName,address,email,phoneNum,profilePic,status) VALUES('" + company.UserId + "','" + company.CompanyName + "','Address','" + company.Email + "','" + company.PhoneNum + "','" + company.ProfilePic + "',0)", con);
+                var cmd = new SqlCommand(
+                    "INSERT INTO Companies(userID,companyName,address,email,phoneNum,profilePic,status) VALUES('"
+                        + company.UserId
+                        + "','"
+                        + company.CompanyName
+                        + "','Address','"
+                        + company.Email
+                        + "','"
+                        + company.PhoneNum
+                        + "','"
+                        + company.ProfilePic
+                        + "',0)",
+                    con
+                );
                 cmd.ExecuteNonQuery();
                 con.Close();
             }
-            catch (Exception) 
+            catch (Exception)
             {
                 throw new Exception(null);
             }
@@ -33,8 +49,8 @@ namespace InsuranceBackend.Services
 
         public Company GetCompany(int userID)
         {
-            var res = _context.Companies.FirstOrDefault(c=>c.UserId == userID);
-            if(res == null)
+            var res = _context.Companies.FirstOrDefault(c => c.UserId == userID);
+            if (res == null)
             {
                 return res = new Company();
             }
@@ -46,6 +62,7 @@ namespace InsuranceBackend.Services
             var res = _context.Companies.Find(companyName);
             return res ?? throw new Exception();
         }
+
         public IEnumerable<Company> GetAllCompanies()
         {
             return _context.Companies.ToList();
@@ -71,19 +88,23 @@ namespace InsuranceBackend.Services
         public Policy UpdatePolicy(Policy policy)
         {
             _context.Policies.Update(policy);
-            var pts = _context.PolicyTerms.Where(pt=>pt.PolicyId == policy.PolicyId).ToList();
+            var pts = _context.PolicyTerms.Where(pt => pt.PolicyId == policy.PolicyId).ToList();
             foreach (var pt in pts)
             {
-               var cp = _context.ClientPolicies.Where(cp => cp.PolicyTermId == pt.PolicyTermId).ToList();
+                var cp = _context.ClientPolicies
+                    .Where(cp => cp.PolicyTermId == pt.PolicyTermId)
+                    .ToList();
                 foreach (var c in cp)
                 {
-                    var dcp = _context.ClientPolicies.First(c => c.ClientPolicyId == c.ClientPolicyId);
+                    var dcp = _context.ClientPolicies.First(
+                        c => c.ClientPolicyId == c.ClientPolicyId
+                    );
                     dcp.Status = ClientPolicyStatusEnum.Deprecated;
                     _context.ClientPolicies.Update(dcp);
                 }
             }
             _context.SaveChanges();
-            return _context.Policies.OrderBy(p=>p.PolicyId).Last();
+            return _context.Policies.OrderBy(p => p.PolicyId).Last();
         }
 
         public void AddPolicy(Policy policy)
@@ -91,12 +112,41 @@ namespace InsuranceBackend.Services
             ValidatePolicy(policy);
             policy.PolicyId = 0;
             policy.Status = (int)StatusEnum.Inactive;
-            var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            var con = new SqlConnection(
+                "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
+            );
             con.Open();
-            var cmd = new SqlCommand("INSERT INTO Policies(companyID,policytypeID,policyName,timePeriod,policyAmount,status) VALUES('" + policy.CompanyId + "','" + policy.PolicytypeId + "','" + policy.PolicyName + "','" + policy.TimePeriod + "','" + policy.PolicyAmount + "','" +(int) policy.Status + "')", con);
+            var cmd = new SqlCommand(
+                "INSERT INTO Policies(companyID,policytypeID,policyName,timePeriod,policyAmount,status) VALUES('"
+                    + policy.CompanyId
+                    + "','"
+                    + policy.PolicytypeId
+                    + "','"
+                    + policy.PolicyName
+                    + "','"
+                    + policy.TimePeriod
+                    + "','"
+                    + policy.PolicyAmount
+                    + "','"
+                    + (int)policy.Status
+                    + "')",
+                con
+            );
             cmd.ExecuteNonQuery();
-            var PolicyId = _context.Policies.OrderByDescending(p => p.PolicyId).FirstOrDefault().PolicyId;
-            var cmd2 = new SqlCommand("INSERT INTO PolicyTerms(policyID,period,terms,premiumAmount) VALUES('" + PolicyId + "','" + policy.TimePeriod + "',1,'" + (float) policy.PolicyAmount * 0.8 + "')", con);
+            var PolicyId = _context.Policies
+                .OrderByDescending(p => p.PolicyId)
+                .FirstOrDefault()
+                .PolicyId;
+            var cmd2 = new SqlCommand(
+                "INSERT INTO PolicyTerms(policyID,period,terms,premiumAmount) VALUES('"
+                    + PolicyId
+                    + "','"
+                    + policy.TimePeriod
+                    + "',1,'"
+                    + (float)policy.PolicyAmount * 0.8
+                    + "')",
+                con
+            );
             cmd2.ExecuteNonQuery();
             con.Close();
             //_context.Policies.Add(policy);
@@ -105,9 +155,22 @@ namespace InsuranceBackend.Services
 
         public void AddPolicyTerm(PolicyTerm policyTerm)
         {
-            var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
+            var con = new SqlConnection(
+                "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
+            );
             con.Open();
-            var cmd = new SqlCommand("INSERT INTO PolicyTerms(policyID,period,terms,premiumAmount) VALUES('" + policyTerm.PolicyId + "','" + policyTerm.Period + "','" + policyTerm.Terms + "','" + policyTerm.PremiumAmount +"')", con);
+            var cmd = new SqlCommand(
+                "INSERT INTO PolicyTerms(policyID,period,terms,premiumAmount) VALUES('"
+                    + policyTerm.PolicyId
+                    + "','"
+                    + policyTerm.Period
+                    + "','"
+                    + policyTerm.Terms
+                    + "','"
+                    + policyTerm.PremiumAmount
+                    + "')",
+                con
+            );
             cmd.ExecuteNonQuery();
             con.Close();
             //_context.PolicyTerms.Add(policyTerm);
@@ -118,7 +181,6 @@ namespace InsuranceBackend.Services
         {
             Policy? policy = _context.Policies.FirstOrDefault(p => p.PolicyId == policyId);
             return policy ?? throw new NullReferenceException();
-
         }
 
         //Status
@@ -136,7 +198,9 @@ namespace InsuranceBackend.Services
         public void ChangeAgentRequest(int agentID, StatusEnum e)
         {
             ValidateAgentRequest(agentID);
-            AgentCompany dbreq = _context.AgentCompanies.FirstOrDefault(a => a.AgentId == agentID) ?? throw new ArgumentNullException();
+            AgentCompany dbreq =
+                _context.AgentCompanies.FirstOrDefault(a => a.AgentId == agentID)
+                ?? throw new ArgumentNullException();
             if (!StatusEnum.IsDefined(typeof(StatusEnum), e))
             {
                 throw new Exception();
@@ -145,20 +209,17 @@ namespace InsuranceBackend.Services
             _context.AgentCompanies.Update(dbreq);
             _context.SaveChanges();
         }
-        
+
         //Views
         public IEnumerable<AgentCompany> ViewAgents(int companyId)
         {
-            return _context.AgentCompanies.Where(a=>a.CompanyId == companyId).ToList();
+            return _context.AgentCompanies.Where(a => a.CompanyId == companyId).ToList();
         }
-        
-      
 
         public IEnumerable<Policy> ViewPolicies(int companyID)
         {
-            return _context.Policies.Include(p=>p.CompanyId==companyID).ToList();
+            return _context.Policies.Include(p => p.CompanyId == companyID).ToList();
         }
-
 
         public AgentCompany CreateReferral(AgentCompany _agentCompany)
         {
@@ -166,22 +227,29 @@ namespace InsuranceBackend.Services
             var dbcompany = _context.Companies.First(c => c.CompanyId == _agentCompany.CompanyId);
             var dbagent = _context.Agents.First(a => a.AgentId == _agentCompany.AgentId);
             Retry:
-            _agentCompany.Referral = dbcompany.CompanyName + dbagent.AgentName + random.Next(1,1000);
-            var dbac = _context.AgentCompanies.FirstOrDefault(ac => ac.Referral == _agentCompany.Referral);
-            if (dbac != null) goto Retry;
+            _agentCompany.Referral =
+                dbcompany.CompanyName + dbagent.AgentName + random.Next(1, 1000);
+            var dbac = _context.AgentCompanies.FirstOrDefault(
+                ac => ac.Referral == _agentCompany.Referral
+            );
+            if (dbac != null)
+                goto Retry;
             return _agentCompany;
         }
 
         //Validations
         private void ValidatePolicy(Policy policy)
-        {   
-            var policytypeID=_context.PolicyTypes.Select(p=>p.PolicytypeId==policy.PolicytypeId) ?? throw new ArgumentNullException(null,nameof(policy));
-
+        {
+            var policytypeID =
+                _context.PolicyTypes.Select(p => p.PolicytypeId == policy.PolicytypeId)
+                ?? throw new ArgumentNullException(null, nameof(policy));
         }
 
         private void ValidateAgentRequest(int agentID)
         {
-            var dbreq = _context.AgentCompanies.FirstOrDefault(s => s.AgentId == agentID) ?? throw new NullReferenceException();
+            var dbreq =
+                _context.AgentCompanies.FirstOrDefault(s => s.AgentId == agentID)
+                ?? throw new NullReferenceException();
         }
     }
 }
