@@ -2,7 +2,7 @@
 using InsuranceBackend.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using InsuranceBackend.Database;
 
 namespace InsuranceBackend.Services
 {
@@ -19,9 +19,7 @@ namespace InsuranceBackend.Services
         {
             try
             {
-                var con = new SqlConnection(
-                    "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
-                );
+                var con = new SqlConnection(DBConnection.ConnectionString);
                 con.Open();
                 var cmd = new SqlCommand(
                     "INSERT INTO Agents(userID,agentName,gender,phoneNum,dob,email,address,grade,profilePic,status) VALUES('"
@@ -41,7 +39,6 @@ namespace InsuranceBackend.Services
                 );
                 cmd.ExecuteNonQuery();
                 con.Close();
-                //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Users OFF");
             }
             catch (Exception)
             {

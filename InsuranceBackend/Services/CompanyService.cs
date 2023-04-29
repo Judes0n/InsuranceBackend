@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using InsuranceBackend.Models;
 using Microsoft.Data.SqlClient;
+using InsuranceBackend.Database;
 
 namespace InsuranceBackend.Services
 {
@@ -19,9 +20,7 @@ namespace InsuranceBackend.Services
         {
             try
             {
-                var con = new SqlConnection(
-                    "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
-                );
+                var con = new SqlConnection(DBConnection.ConnectionString);
                 con.Open();
                 var cmd = new SqlCommand(
                     "INSERT INTO Companies(userID,companyName,address,email,phoneNum,profilePic,status) VALUES('"
@@ -112,9 +111,7 @@ namespace InsuranceBackend.Services
             ValidatePolicy(policy);
             policy.PolicyId = 0;
             policy.Status = (int)StatusEnum.Inactive;
-            var con = new SqlConnection(
-                "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
-            );
+            var con = new SqlConnection(DBConnection.ConnectionString);
             con.Open();
             var cmd = new SqlCommand(
                 "INSERT INTO Policies(companyID,policytypeID,policyName,timePeriod,policyAmount,status) VALUES('"
@@ -149,15 +146,11 @@ namespace InsuranceBackend.Services
             );
             cmd2.ExecuteNonQuery();
             con.Close();
-            //_context.Policies.Add(policy);
-            //_context.SaveChanges();
         }
 
         public void AddPolicyTerm(PolicyTerm policyTerm)
         {
-            var con = new SqlConnection(
-                "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
-            );
+            var con = new SqlConnection(DBConnection.ConnectionString);
             con.Open();
             var cmd = new SqlCommand(
                 "INSERT INTO PolicyTerms(policyID,period,terms,premiumAmount) VALUES('"
@@ -173,8 +166,6 @@ namespace InsuranceBackend.Services
             );
             cmd.ExecuteNonQuery();
             con.Close();
-            //_context.PolicyTerms.Add(policyTerm);
-            //_context.SaveChanges();
         }
 
         public Policy GetPolicy(int policyId)

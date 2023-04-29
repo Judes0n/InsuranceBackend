@@ -1,16 +1,9 @@
 ﻿using InsuranceBackend.Enum;
 using InsuranceBackend.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using System.Diagnostics.Metrics;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using InsuranceBackend.Database;
 
 namespace InsuranceBackend.Services
 {
@@ -71,7 +64,7 @@ namespace InsuranceBackend.Services
                 throw new Exception(null);
             }
             var con = new SqlConnection(
-                "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
+                DBConnection.ConnectionString
             );
             con.Open();
             var cmd = new SqlCommand(
@@ -93,10 +86,6 @@ namespace InsuranceBackend.Services
             cmd.ExecuteNonQuery();
             con.Close();
 
-            //var con = new SqlConnection("Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;");
-            //con.Open();
-            //var cmd = new SqlCommand("INSERT INTO ClientPolicy(clientID,policyTermID,nomineeID,startDate,expDate,counter,status,referral,agentID) VALUES()", con);
-            //cmd.ExecuteNonQuery();
             return _context.Clients.OrderBy(c => c.ClientId).Last();
         }
 
@@ -143,9 +132,7 @@ namespace InsuranceBackend.Services
             );
             if (testcp == null)
             {
-                var con = new SqlConnection(
-                    "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
-                );
+                var con = new SqlConnection(DBConnection.ConnectionString);
                 con.Open();
                 var cmd = new SqlCommand(
                     "INSERT INTO ClientPolicy(clientID,policyTermID,nomineeID,startDate,expDate,counter,status,referral,agentID) VALUES('"
@@ -346,9 +333,7 @@ namespace InsuranceBackend.Services
         public void AddNominee(Nominee nominee)
         {
             ValidateNominee(nominee);
-            var con = new SqlConnection(
-                "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
-            );
+            var con = new SqlConnection(DBConnection.ConnectionString);
             con.Open();
             var cmd = new SqlCommand(
                 "INSERT INTO Nominees(clientID,nomineeName,relation,address,phoneNum) VALUES('"
@@ -366,8 +351,6 @@ namespace InsuranceBackend.Services
             );
             cmd.ExecuteNonQuery();
             con.Close();
-            //_context.Nominees.Add(nominee);
-            //_context.SaveChanges();
         }
 
         //Views
@@ -402,11 +385,7 @@ namespace InsuranceBackend.Services
         public IEnumerable<Nominee> ViewClientNominees(int clientID)
         {
             ValidateClient(clientID);
-            using (
-                var con = new SqlConnection(
-                    "Server=JUDE;Database=InsuranceDB;Trusted_Connection=True;TrustServerCertificate=True;"
-                )
-            )
+            using (var con = new SqlConnection(DBConnection.ConnectionString))
             {
                 var cmd = new SqlCommand($"SELECT * FROM Nominees WHERE ClientId={clientID}", con);
                 var adapter = new SqlDataAdapter(cmd);
@@ -470,11 +449,6 @@ namespace InsuranceBackend.Services
         {
             return _context.Agents.FirstOrDefault(a => a.AgentId == agentID) != null;
         }
-
-        //private bool ValidateClient(int clientID)
-        //{
-        //    return _context.Clients.FirstOrDefault(c => c.ClientId == clientID) != null;
-        //}
 
         private void ValidateClientPolicy(ClientPolicy clientPolicy)
         {
