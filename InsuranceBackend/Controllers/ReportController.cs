@@ -124,7 +124,7 @@ namespace InsuranceBackend.Controllers
             var users = new List<User>();
             foreach (var user in allusers)
             {
-                if (user.Type == Enum.UserTypeEnum.Admin)
+                if (user.Type != Enum.UserTypeEnum.Admin)
                     users.Add(user);
             }
             return users;
@@ -137,21 +137,21 @@ namespace InsuranceBackend.Controllers
             switch (userType)
             {
                 case UserTypeEnum.Company:
-                {
-                    return Ok(_dbContext.Companies.ToList());
-                }
+                    {
+                        return Ok(_dbContext.Companies.ToList());
+                    }
                 case UserTypeEnum.Agent:
-                {
-                    return Ok(_dbContext.Agents.ToList());
-                }
+                    {
+                        return Ok(_dbContext.Agents.ToList());
+                    }
                 case UserTypeEnum.Client:
-                {
-                    return Ok(_dbContext.Clients.ToList());
-                }
+                    {
+                        return Ok(_dbContext.Clients.ToList());
+                    }
                 default:
-                {
-                    return Ok(new User() { UserId = 0 });
-                }
+                    {
+                        return Ok(new User() { UserId = 0 });
+                    }
             }
         }
 
@@ -163,7 +163,7 @@ namespace InsuranceBackend.Controllers
         }
 
         [HttpGet]
-        [Route("Admin-Maturities")]
+        [Route("Admin-ClientDeaths")]
         public IEnumerable<ClientDeath> GetClientDeaths()
         {
             return _dbContext.ClientDeaths.ToList();
