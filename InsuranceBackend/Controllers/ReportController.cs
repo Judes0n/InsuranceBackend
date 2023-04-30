@@ -93,18 +93,18 @@ namespace InsuranceBackend.Controllers
             var policyterms = new List<PolicyTerm>();
             foreach (var policy in policies)
             {
-                policyterms.Add(
-                    _dbContext.PolicyTerms.FirstOrDefault(pt => pt.PolicyId == policy.PolicyId)
-                );
+                policyterms.Add(_dbContext.PolicyTerms.First(pt => pt.PolicyId == policy.PolicyId));
             }
             var clientpolicies = new List<ClientPolicy>();
             foreach (var pt in policyterms)
             {
-                clientpolicies.Add(
-                    _dbContext.ClientPolicies.FirstOrDefault(
-                        cp => cp.PolicyTermId == pt.PolicyTermId
-                    )
+                var c = _dbContext.ClientPolicies.FirstOrDefault(
+                    cp => cp.PolicyTermId == pt.PolicyTermId
                 );
+                if (c != null)
+                {
+                    clientpolicies.Add(c);
+                }
             }
             return clientpolicies;
         }
@@ -137,21 +137,21 @@ namespace InsuranceBackend.Controllers
             switch (userType)
             {
                 case UserTypeEnum.Company:
-                    {
-                        return Ok(_dbContext.Companies.ToList());
-                    }
+                {
+                    return Ok(_dbContext.Companies.ToList());
+                }
                 case UserTypeEnum.Agent:
-                    {
-                        return Ok(_dbContext.Agents.ToList());
-                    }
+                {
+                    return Ok(_dbContext.Agents.ToList());
+                }
                 case UserTypeEnum.Client:
-                    {
-                        return Ok(_dbContext.Clients.ToList());
-                    }
+                {
+                    return Ok(_dbContext.Clients.ToList());
+                }
                 default:
-                    {
-                        return Ok(new User() { UserId = 0 });
-                    }
+                {
+                    return Ok(new User() { UserId = 0 });
+                }
             }
         }
 
