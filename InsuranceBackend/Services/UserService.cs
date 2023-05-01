@@ -5,7 +5,7 @@ using InsuranceBackend.Database;
 namespace InsuranceBackend.Services
 {
     public class UserService
-    {   
+    {
         private InsuranceDbContext _context;
 
         public UserService()
@@ -53,12 +53,35 @@ namespace InsuranceBackend.Services
         public User UpdateUser(User user)
         {
             var dbuser = _context.Users.FirstOrDefault(u => u.UserId == user.UserId);
+            var testuser = _context.Users.FirstOrDefault(u => u.UserName == user.UserName);
             if (dbuser != null)
             {
-                dbuser.UserName = user.UserName;
-                dbuser.Password = user.Password;
-                _context.Users.Update(dbuser);
-                _context.SaveChanges();
+                if (testuser != null)
+                {
+                    if (dbuser.UserName == testuser.UserName)
+                    {
+                        if (dbuser == testuser)
+                        {
+                            dbuser.UserName = user.UserName;
+                            dbuser.Password = user.Password;
+                            _context.Users.Update(dbuser);
+                            _context.SaveChanges();
+                            return _context.Users.First(u => u.UserId == user.UserId);
+                        }
+                    }
+                    else
+                    {
+                        return new() { UserId = -1 };
+                    }
+                } 
+             else
+                {
+                    dbuser.UserName = user.UserName;
+                    dbuser.Password = user.Password;
+                    _context.Users.Update(dbuser);
+                    _context.SaveChanges();
+                    return _context.Users.First(u => u.UserId == user.UserId);
+                }
             }
             return new() { UserId = 0 };
         }

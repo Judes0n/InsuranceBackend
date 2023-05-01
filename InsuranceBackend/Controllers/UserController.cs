@@ -115,7 +115,7 @@ namespace Insurance.Controllers
                                 if (dbagent != null)
                                 {
                                     agent.UserId = dbagent.UserId;
-                                    agent.AgentName = dbagent.UserName;
+                                    agent.AgentName = Request.Form["agentName"];
                                     agent.Gender = Request.Form["gender"];
                                     agent.PhoneNum = Request.Form["phoneNum"];
                                     agent.Dob = Request.Form["dob"];
@@ -136,7 +136,7 @@ namespace Insurance.Controllers
                                 if (dbcompany != null)
                                 {
                                     company.UserId = dbcompany.UserId;
-                                    company.CompanyName = dbcompany.UserName;
+                                    company.CompanyName = Request.Form["companyName"];
                                     company.Address = Request.Form["address"];
                                     company.Email = Request.Form["email"];
                                     company.PhoneNum = Request.Form["phoneNum"];
@@ -270,9 +270,11 @@ namespace Insurance.Controllers
             {
                 return NotFound(); // Return a 404 Not Found response if the file doesn't exist
             }
+
             var fileContent = System.IO.File.ReadAllBytes(loc);
-            var contentTypes = new[] { "image/jpeg", "image/png", "image/jpg" };
-            return File(fileContent, "image/jpg");
+            var contentType = Path.GetExtension(loc);
+            //var contentTypes = new[] { "image/jpeg", "image/png", "image/jpg" };
+            return File(fileContent, $"image/{contentType}");
         }
 
         [HttpPut]

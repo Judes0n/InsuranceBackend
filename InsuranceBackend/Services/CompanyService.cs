@@ -53,7 +53,7 @@ namespace InsuranceBackend.Services
 
         public Company GetCompanyByName(string companyName)
         {
-            var res = _context.Companies.Find(companyName);
+            var res = _context.Companies.FirstOrDefault(c=>c.CompanyName==companyName);
             return res ?? throw new Exception();
         }
 
