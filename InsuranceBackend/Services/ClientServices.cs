@@ -61,27 +61,28 @@ namespace InsuranceBackend.Services
             {
                 throw new Exception(null);
             }
-            var con = new SqlConnection(DBConnection.ConnectionString);
-            con.Open();
-            var cmd = new SqlCommand(
-                "INSERT INTO Clients(userID,clientName,gender,dob,address,profilePic,phoneNum,email,status) VALUES('"
-                    + client.UserId
-                    + "','"
-                    + client.ClientName
-                    + "','"
-                    + client.Gender
-                    + "','Dob','Address','"
-                    + client.ProfilePic
-                    + "','"
-                    + client.PhoneNum
-                    + "','"
-                    + client.Email
-                    + "',0)",
-                con
-            );
-            cmd.ExecuteNonQuery();
-            con.Close();
-
+            //var con = new SqlConnection(DBConnection.ConnectionString);
+            //con.Open();
+            //var cmd = new SqlCommand(
+            //    "INSERT INTO Clients(userID,clientName,gender,dob,address,profilePic,phoneNum,email,status) VALUES('"
+            //        + client.UserId
+            //        + "','"
+            //        + client.ClientName
+            //        + "','"
+            //        + client.Gender
+            //        + "','Dob','Address','"
+            //        + client.ProfilePic
+            //        + "','"
+            //        + client.PhoneNum
+            //        + "','"
+            //        + client.Email
+            //        + "',0)",
+            //    con
+            //);
+            //cmd.ExecuteNonQuery();
+            //con.Close();
+            _context.Clients.Add(client);
+            _context.SaveChanges();
             return _context.Clients.OrderBy(c => c.ClientId).Last();
         }
 
@@ -197,23 +198,17 @@ namespace InsuranceBackend.Services
             var dba = _context.Agents.First(a => a.AgentId == dbcp.AgentId);
             Premium dbpen = new();
             if (penalty != 0)
-                dbpen = _context.Premia.First(
-                    pen =>
-                        pen.ClientPolicyId == payment.ClientPolicyId
-                        && pen.Status == PenaltyStatusEnum.Pending
-                );
-
+                dbpen = _context.Premia.First(pen =>pen.ClientPolicyId == payment.ClientPolicyId&& pen.Status == PenaltyStatusEnum.Pending);
             if (
                 dbcp.Counter == 0
                 || dbcp.Status != ClientPolicyStatusEnum.Active
                 || dbp.Status != StatusEnum.Active
                 || dbc.Status != ActorStatusEnum.Approved
-                || dba.Status != ActorStatusEnum.Approved
-            )
+                || dba.Status != ActorStatusEnum.Approved)
                 payment.Status = PaymentStatusEnum.Unsuccessful;
             else
             {
-                if (dbpen != null)
+                if (dbpen.PremiumId != 0)
                 {
                     payment.Status = PaymentStatusEnum.Successfull;
                     dbpen.Status = PenaltyStatusEnum.Paid;

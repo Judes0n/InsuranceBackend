@@ -138,10 +138,10 @@ namespace InsuranceBackend.Controllers
                     ClientPolicyId = int.Parse(Request.Form["clientPolicyId"]),
                     TransactionId = Request.Form["transactionId"],
                     Time = Request.Form["time"],
-                    Amount = int.Parse(Request.Form["amount"]),
+                    Amount = int.Parse(Request.Form["amount"]),                        
                     Status = Enum.PaymentStatusEnum.Processing
                 };
-            if (int.Parse(Request.Form["penalty"]) == 0)
+            if (int.Parse(Request.Form["penalty"]) == 0 )
                 return Ok(_clientService.MakePayment(payment, 0));
             else
                 return Ok(_clientService.MakePayment(payment, 1));

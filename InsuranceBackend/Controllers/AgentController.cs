@@ -98,7 +98,7 @@ namespace Insurance.Controllers
         public IEnumerable<Company> GetCompaniesby(int agentId)
         {
             var companies = _dbContext.AgentCompanies
-                .Where(ac => ac.AgentId == agentId)
+                .Where(ac => ac.AgentId == agentId && ac.Status == StatusEnum.Active)
                 .Select(a => a.CompanyId)
                 .ToList();
             List<Company> result = new();

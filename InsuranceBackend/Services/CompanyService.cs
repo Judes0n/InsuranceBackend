@@ -20,30 +20,14 @@ namespace InsuranceBackend.Services
         {
             try
             {
-                var con = new SqlConnection(DBConnection.ConnectionString);
-                con.Open();
-                var cmd = new SqlCommand(
-                    "INSERT INTO Companies(userID,companyName,address,email,phoneNum,profilePic,status) VALUES('"
-                        + company.UserId
-                        + "','"
-                        + company.CompanyName
-                        + "','Address','"
-                        + company.Email
-                        + "','"
-                        + company.PhoneNum
-                        + "','"
-                        + company.ProfilePic
-                        + "',0)",
-                    con
-                );
-                cmd.ExecuteNonQuery();
-                con.Close();
+                _context.Companies.Add(company);
+                _context.SaveChanges();
             }
             catch (Exception)
             {
                 throw new Exception(null);
             }
-            return GetCompanyByName(company.CompanyName);
+            return _context.Companies.OrderBy(c=>c.CompanyId).Last();
         }
 
         public Company? GetCompany(int userID)
@@ -214,7 +198,7 @@ namespace InsuranceBackend.Services
             var dbagent = _context.Agents.First(a => a.AgentId == _agentCompany.AgentId);
             Retry:
             _agentCompany.Referral =
-                dbcompany.CompanyName + dbagent.AgentName + random.Next(1, 1000);
+                dbcompany.CompanyName.Replace(" ", "") + dbagent.AgentName.Replace(" ", "") + random.Next(1, 1000);
             var dbac = _context.AgentCompanies.FirstOrDefault(
                 ac => ac.Referral == _agentCompany.Referral
             );

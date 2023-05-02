@@ -27,21 +27,14 @@ namespace InsuranceBackend.Services
 
         public User AddUser(User user)
         {
-            var con = new SqlConnection(DBConnection.ConnectionString);
-            con.Open();
-            var cmd = new SqlCommand(
-                "INSERT INTO Users(userName,password,type,status) VALUES('"
-                    + user.UserName
-                    + "','"
-                    + user.Password
-                    + "','"
-                    + (int)user.Type
-                    + "',0)",
-                con
-            );
-            cmd.ExecuteNonQuery();
-            con.Close();
-            return user;
+            var test =_context.Users.FirstOrDefault(u => u.UserName == user.UserName);
+            if (test == null)
+            {
+                _context.Users.Add(user);
+                _context.SaveChanges();
+                return _context.Users.OrderBy(u => u.UserId).Last();
+            }
+            else return test;
         }
 
         public void DeleteUser(User user)
